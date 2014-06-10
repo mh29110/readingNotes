@@ -1,0 +1,72 @@
+#+BLOG: phantomjia
+#+POSTID: 85
+#+DATE: [2014-06-10 Tue 09:30]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS: reading
+#+DESCRIPTION:
+#+TITLE: Computer Systems A Programmer’s Perspective II (深入理解计算机系统 第二 - 三章 ）
+** chapter two: Representing and Manipulating Infomation
+ 信息的表示和处理
+*** Infomation Storage   *信息存储*
+**** concepts
+- byte , 最小的可寻址的存储器单元.
+- virtual memory
+- address , 存储器的每个字节都由一个唯一的数字来标识.
+- virtual address space  ,虚拟地址空间 即 所有可能的地址的集合.
+***** 二进制与十六进制的转换 : 
+每四位单独转换.
+**** Words
+word size : 指明整数和指针数据的标准大小 (nominal size) . 
+字长决定了虚拟地址空间的最大大小.
+**** endian
+***** little endian
+***** big endian
+***** bi-endian 
+example:      int x = 0x1234567;        x's address = 0x100 ;
+| address       | 0x100 | 0x101 | 0x102 | 0x103 |
+|---------------+-------+-------+-------+-------|
+| big endian    |    01 |    23 |    45 |    67 |
+|---------------+-------+-------+-------+-------|
+| little endian |    67 |    45 |    23 |    01 |
+|---------------+-------+-------+-------+-------|
+****** Notice :
+  C语言中的typedef声明提供了一种给数据类型命名的方式,可以极大的改善代码的可读性.  如 typedef unsigned char * _byte_pointer_ ;
+**** Representing string
+**** Representing code
+**** Introduction to Boolean Algebra  (布尔代数)
+**** Bit-level Operations in C
+***** Exclusive-OR (异或)
+**** Logical Operations in C (逻辑运算)
+**** Shift Operations in C (移位运算)
+*** Integer Representations *整数表示*
+**** integer data type (normal)
+| type           |         mix |        max |
+|----------------+-------------+------------|
+| char           |        -128 |        127 |
+| unsigned char  |           0 |        255 |
+| short (int)    |      -32768 |      32767 |
+| unsigned short |           0 |      65535 |
+| int            | -2147483648 | 2147483647 |
+***** two's-complement  *补码*
+***** ISO C99 中在stdint.h中引入 intN_t和uintN_t ,来标识N位有符号和无符号的整数,保证行为一致性.
+*** Integer Arithmetic
+*** Floating Point    *浮点数表示*
+*** Summary
+*** Homework Problems !!!!! *hard*
+----------------------
+** chapter three: Machine-Level Representation of Programs   
+程序的机器级表示
+计算机执行机器代码,用字节序列编码低级的操作,包括处理数据,管理存储器,读写存储设备上的数据,以及利用网络通信.编译器基于编程语言的原则,目标机器的指令集和操作系统遵循的规则,经过一系列的阶段产生机器代码.
+
+GCC C语言编译器以汇编代码的形式产生输出,汇编代码是机器代码的文本表示,给出程序中的每一条指令.然后GCC调用汇编器和连接器,从而根据汇编代码生成可执行的机器代码.
+*** Program Encodings   汇编
+**** Machine-Level code  机器级代码  
+简单的寄存器组
+- PC 程序计数器               用%eip标识   指示将要执行的下一条指令所在存储器中的地址.
+- xx寄存器                   存储32位的值.可以存储地址(对应C语言中的指针)或整数数据.   用于记录某些重要的程序状态,保存临时数据,例如局部变量和程序的返回值.
+- xx寄存器                   保存最近执行的算术或逻辑指令的状态信息,   用于实现控制或者数据流中的条件变化,例如if while等语句
+- 浮点寄存器
+**** program memory
+程序存储器:包含可执行的机器码,操作系统需要的一些信息,用来管理过程调用和返回的运行时栈,以及用户分配的存储器块(如malloc).程序存储器用虚拟地址寻址. 在任意给定的时刻,只认为有限的一部分虚拟地址是合法的.例如虽然IA32的32位地址可以寻址4GB的地址范围,但通常一个程序只会访问几兆的字节.操作系统负责管理虚拟地址空间,将虚拟地址翻译成实际处理器存储器中的物理地址.
+**** 
