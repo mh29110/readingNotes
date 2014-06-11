@@ -60,6 +60,8 @@ example:      int x = 0x1234567;        x's address = 0x100 ;
 ¼ÆËã»úÖ´ÐÐ»úÆ÷´úÂë,ÓÃ×Ö½ÚÐòÁÐ±àÂëµÍ¼¶µÄ²Ù×÷,°üÀ¨´¦ÀíÊý¾Ý,¹ÜÀí´æ´¢Æ÷,¶ÁÐ´´æ´¢Éè±¸ÉÏµÄÊý¾Ý,ÒÔ¼°ÀûÓÃÍøÂçÍ¨ÐÅ.±àÒëÆ÷»ùÓÚ±à³ÌÓïÑÔµÄÔ­Ôò,Ä¿±ê»úÆ÷µÄÖ¸Áî¼¯ºÍ²Ù×÷ÏµÍ³×ñÑ­µÄ¹æÔò,¾­¹ýÒ»ÏµÁÐµÄ½×¶Î²úÉú»úÆ÷´úÂë.
 
 GCC CÓïÑÔ±àÒëÆ÷ÒÔ»ã±à´úÂëµÄÐÎÊ½²úÉúÊä³ö,»ã±à´úÂëÊÇ»úÆ÷´úÂëµÄÎÄ±¾±íÊ¾,¸ø³ö³ÌÐòÖÐµÄÃ¿Ò»ÌõÖ¸Áî.È»ºóGCCµ÷ÓÃ»ã±àÆ÷ºÍÁ¬½ÓÆ÷,´Ó¶ø¸ù¾Ý»ã±à´úÂëÉú³É¿ÉÖ´ÐÐµÄ»úÆ÷´úÂë.
+
+ÎÒÃÇÌÖÂÛµÄÊÇIA32µÄÖÐÑë´¦ÀíÆ÷
 *** Program Encodings   »ã±à
 **** Machine-Level code  »úÆ÷¼¶´úÂë  
 ¼òµ¥µÄ¼Ä´æÆ÷×é
@@ -69,4 +71,108 @@ GCC CÓïÑÔ±àÒëÆ÷ÒÔ»ã±à´úÂëµÄÐÎÊ½²úÉúÊä³ö,»ã±à´úÂëÊÇ»úÆ÷´úÂëµÄÎÄ±¾±íÊ¾,¸ø³ö³ÌÐòÖÐµ
 - ¸¡µã¼Ä´æÆ÷
 **** program memory
 ³ÌÐò´æ´¢Æ÷:°üº¬¿ÉÖ´ÐÐµÄ»úÆ÷Âë,²Ù×÷ÏµÍ³ÐèÒªµÄÒ»Ð©ÐÅÏ¢,ÓÃÀ´¹ÜÀí¹ý³Ìµ÷ÓÃºÍ·µ»ØµÄÔËÐÐÊ±Õ»,ÒÔ¼°ÓÃ»§·ÖÅäµÄ´æ´¢Æ÷¿é(Èçmalloc).³ÌÐò´æ´¢Æ÷ÓÃÐéÄâµØÖ·Ñ°Ö·. ÔÚÈÎÒâ¸ø¶¨µÄÊ±¿Ì,Ö»ÈÏÎªÓÐÏÞµÄÒ»²¿·ÖÐéÄâµØÖ·ÊÇºÏ·¨µÄ.ÀýÈçËäÈ»IA32µÄ32Î»µØÖ·¿ÉÒÔÑ°Ö·4GBµÄµØÖ··¶Î§,µ«Í¨³£Ò»¸ö³ÌÐòÖ»»á·ÃÎÊ¼¸Õ×µÄ×Ö½Ú.²Ù×÷ÏµÍ³¸ºÔð¹ÜÀíÐéÄâµØÖ·¿Õ¼ä,½«ÐéÄâµØÖ··­Òë³ÉÊµ¼Ê´¦ÀíÆ÷´æ´¢Æ÷ÖÐµÄÎïÀíµØÖ·.
-**** 
+*** Accessing Infomation
+**** ¼Ä´æÆ÷  register
+- Ò»¸öIA32µÄCPU°üº¬Ò»×é8¸ö´æ´¢32Î»ÖµµÄ¼Ä´æÆ÷.ÓÃÓÚ´æ´¢ÕûÊýÊý¾ÝºÍÖ¸Õë. Ãû×Ö¶¼ÒÔ%e¿ªÍ·
+- Ç°Áù¸ö¶àÊýÇé¿ö¿´³ÉÍ¨ÓÃ¼Ä´æÆ÷,
+- ×îºóÁ½¸ö¼Ä´æÆ÷ %ebp , %esp ±£´æ×ÅÖ¸Ïò³ÌÐòÕ»ÖÐÖØÒªÎ»ÖÃµÄÖ¸Õë.ÀýÈç: Õ»Ö¸Õë%esp±£´æ×ÅÕ»¶¥ÔªËØµÄµØÖ·.
+**** ²Ù×÷ÊýÖ¸Ê¾·û  Operand 
+ Ö¸Ê¾³öÖ´ÐÐÒ»¸ö²Ù×÷ÖÐÒªÒýÓÃµÄÔ´Êý¾ÝÖµ,ÒÔ¼°·ÅÖÃ½á¹ûµÄÄ¿±êÎ»ÖÃ.
+ ÈýÖÖÀàÐÍ:
+- Á¢¼´ÊýÑ°Ö·  (immediate)   ¼´ ³£ÊýÖµ      |±íÊ¾: '$'ºó¸úÒ»¸ö±ê×¼C±íÊ¾·¨±íÊ¾µÄÕûÊý  |Èç $Imm  , $-577 , $0x1f . 
+- ¼Ä´æÆ÷Ñ°Ö·  (register)                  | Èç %eax  , %ax .
+- ´æ´¢Æ÷Ñ°Ö·  (memory)                    |Ñ°Ö·Ä£Ê½: Á¢¼´ÊýÆ«ÒÆImm,»ùÖ·¼Ä´æÆ÷Eb,±äÖ·¼Ä´æÆ÷Ei,±ÈÀýÒò×Ós.
+**** Êý¾Ý´«ÊäÖ¸Áî  MOV
+***** Õ»²Ù×÷ËµÃ÷
+¸ù¾Ý¹ßÀý,Õ»ÊÇµ¹×Å»­µÄ,Òò¶øÕ»¶¥ÔÚµ×²¿,IA32µÄÕ»ÏòµÍµØÖ··½ÏòÔö³¤,ËùÒÔÑ¹Õ»ÊÇ¼õÐ¡Õ»Ö¸Õë(¼Ä´æÆ÷%esp)µÄÖµ,²¢½«Êý¾Ý´æ·ÅÔÚ´æ´¢Æ÷ÖÐ,¶ø³öÕ»ÊÇ´Ó¼Ä´æÆ÷ÖÐ¶Á,²¢Ôö¼ÓÕ»Ö¸ÕëµÄÖµ.
+#+imgs/stack.png http://phantomjia.files.wordpress.com/2014/06/wpid-stack.png
+**** ËãÊõºÍÂß¼­²Ù×÷   Arithmetic and Logical Operations
+***** ¼ÓÔØÓÐÐ§µØÖ· 
+/load effective address/ Ö¸Áî : *leal* .  ´Ó´æ´¢Æ÷¶ÁÊý¾Ýµ½¼Ä´æÆ÷.
+***** Ò»Ôª²Ù×÷Óë¶þÔª²Ù×÷   Unary and Binary Operations
+***** Î»ÒÆ²Ù×÷  Shift Operations
+**** Controll  Á÷³Ì¿ØÖÆ
+***** Condition Codes
+****** condition code register  : Ìõ¼þ´úÂë¼Ä´æÆ÷
+***** Jump Instructions and Their Encodings  Ìø×ªÖ¸Áî¼°Æä±àÂë
+***** Translating Conditional Branches  Ìõ¼þ·ÖÖ§.
+***** Loops  Ñ­»·
+***** Conditional Move Instructions Ìõ¼þ´«ËÍ
+***** Switch *****
+**** Procedures   ¹ý³Ì
+Ò»¸ö¹ý³Ìµ÷ÓÃ°üÀ¨½«Êý¾Ý(ÒÔ¹ý³Ì²ÎÊýºÍ·µ»ØÖµµÄÐÎÊ½)ºÍ¿ØÖÆ´Ó´úÂëµÄÒ»²¿·Ö´«µÝµ½ÁíÒ»²¿·Ö. ÁíÍâËü»¹±ØÐëÔÚ½øÈëÊ±Îª¹ý³ÌµÄ¾Ö²¿±äÁ¿·ÖÅä¿Õ¼ä,²¢ÔÚÍË³öÊ±ÊÍ·Å.  ´ó¶àÊý»úÆ÷,°üÀ¨IA32,Ö»Ìá¹©×ªÒÆ¿ØÖÆµ½¹ý³ÌºÍ´Ó¹ý³ÌÖÐ×ªÒÆ³ö¿ØÖÆÕâÖÖ¼òµ¥µÄÖ¸Áî. Êý¾Ý´«µÝ,¾Ö²¿±äÁ¿µÄ·ÖÅäºÍÊÍ·ÅÍ¨¹ý²Ù×Ý³ÌÐòÕ»À´ÊµÏÖ.
+***** Stack Frame Structure  Õ»Ö¡½á¹¹
+»úÆ÷ÓÃÕ»À´´«µÝ¹ý³Ì²ÎÊý,´æ´¢·µ»ØÐÅÏ¢,±£´æ¼Ä´æÆ÷ÓÃÓÚÒÔºó»Ö¸´,ÒÔ¼°±¾µØ´æ´¢. Îªµ¥¸ö¹ý³Ì·ÖÅäµÄÄÇ²¿·ÖÕ»³ÆÎªÕ»Ö¡ . _stack frame_
+Õ»Ö¡µÄ×î¶¥¶ËÒÔÁ½¸öÖ¸Õë½ç¶¨:
+- ¼Ä´æÆ÷ %ebp ÎªÖ¡Ö¸Õë;
+- ¼Ä´æÆ÷ %esp ÎªÕ»Ö¸Õë.
+[[file:imgs/stack2.png]]
+#+imgs/stack2.png http://phantomjia.files.wordpress.com/2014/06/wpid-stack2.png
+   ¼ÙÉè¹ý³ÌP(µ÷ÓÃÕß)µ÷ÓÃ¹ý³ÌQ(±»µ÷ÓÃÕß),ÔòQµÄ²ÎÊý·ÅÔÚPµÄÕ»Ö¡ÖÐ. PµÄ·µ»ØµØÖ·±»Ñ¹ÈëÕ»ÖÐ,ÐÎ³ÉPµÄÕ»Ö¡µÄÄ©Î²,ÓÃÓÚ³ÌÐò´ÓQÖÐ·µ»ØÊ±¼ÌÐøÖ´ÐÐµÄµØ·½. QµÄÕ»Ö¡´Ó±£´æµÄÖ¡Ö¸ÕëµÄÖµ(%ebp)¿ªÊ¼,ºóÃæÊÇ±£´æµÄÆäËû¼Ä´æÆ÷µÄÖµ.
+
+   ¹ý³ÌQÒ²ÓÃÕ»À´±£´æÆäËû²»ÄÜ´æ·ÅÔÚ¼Ä´æÆ÷ÖÐµÄ¾Ö²¿±äÁ¿,Ô­ÒòÈçÏÂ:
+   - Ã»ÓÐ×ã¹»¶àµÄ¼Ä´æÆ÷´æ·ÅËùÓÐµÄ¾Ö²¿±äÁ¿;
+   - ÓÐÐ©¾Ö²¿±äÁ¿ÊÇÊý×é»òÕß½á¹¹,Òò´Ë±ØÐëÍ¨¹ýÊý¾Ý»ò½á¹¹ÒýÓÃÀ´·ÃÎÊ;
+   - Òª¶ÔÒ»¸ö¾Ö²¿µØÖ·Ê¹ÓÃµØÖ·²Ù×÷·û '&' , ËùÒÔÒªÎªËüÉú³ÉÒ»¸öµØÖ·.
+
+   ÁíÍâQ»áÓÃÕ»Ö¡´æ·Åµ÷ÓÃËüµÄ¹ý³ÌµÄ²ÎÊý. ±»µ÷ÓÃµÄ¹ý³ÌÖÐ,µÚÒ»¸ö²ÎÊý·ÅÔÚÏà¶ÔÓÚ%ebpÆ«ÒÆÁ¿8µÄÎ»ÖÃ´¦,Ê£ÏÂµÄ²ÎÊý(¼ÙÉèÊý¾ÝÀàÐÍÐèÒªµÄ×Ö½Ú²»³¬¹ý4¸ö)´æ´¢ÔÚºóÐøµÄ4×Ö½Ú¿éÖÐ.½Ï´óµÄ²ÎÊý(±ÈÈç½á¹¹)ÐèÒªÕ»ÉÏ¸ü´óµÄÇøÓò.
+
+Õ»ÏòµÍµØÖ··½ÏòÔö³¤.
+***** Recursive Procedures µÝ¹é
+**** Array Allocation and Access Êý¾ÝµÄ·ÖÅäÓë·ÃÎÊ
+ Êý×éÓëÖ¸ÕëµÄ¹ØÏµ. *** ½²µÄºÜÏêÏ¸
+**** Heterogeneous Data Structures 
+- structure  ½á¹¹
+    ±àÒëÆ÷Î¬»¤½á¹¹ÀàÐÍµÄÐÅÏ¢,Ö¸Ê¾Ã¿¸ö×Ö¶Î(field)µÄ×Ö½ÚÆ«ÒÆ.ÒÔÕâÐ©Æ«ÒÆ×÷Îª´æ´¢Æ÷ÒýÓÃÖ¸ÁîÖÐµÄÎ»ÒÆ,´Ó¶ø²úÉú¶Ô½á¹¹ÔªËØµÄÒýÓÃ.
+- union      ÁªºÏ
+    ÒÔ²»Í¬µÄ×Ö¶ÎÀ´ÒýÓÃÏàÍ¬µÄ´æ´¢Æ÷¿é.
+- *Data Alignment*
+  ºÜÓÐÈ¤µÄÒ»½Ú,Ðí¶à¼ÆËã»úÏµÍ³¶Ô»ù±¾Êý¾ÝÀàÐÍºÏ·¨µØÖ·×ö³öÁËÒ»Ð©ÏÞÖÆ,ÒªÇóÄ³ÖÖÀàÐÍ¶ÔÏóµÄµØÖ·±ØÐëÊÇÄ³¸öÖµK(2/4/8)µÄ±¶Êý. ÕâÖÖ¶ÔÆëÏÞÖÆ¼ò»¯ÁËÐÎ³É´¦ÀíÆ÷ºÍ´æ´¢Æ÷ÏµÍ³Ö®¼ä½Ó¿ÚµÄÓ²¼þÉè¼Æ.ÀýÈç:
+#+BEGIN_SRC  
+struct S1{
+    int i;
+    char c;
+    int j;
+};
+#+END_SRC
+| offset | 0 | 4 | 5 | 8 | 12 |
+| value  | i | c | - | j      |
+ÒÔÉÏ:ËäÈ»charÀàÐÍµÄcÖ»Õ¼Ò»¸ö×Ö½Ú,µ«ÊÇÒòÎªwindowsÉè¼ÆÁËÊý¾Ý¶ÔÆëÏÞÖÆ,Ôò5-8µÄÄÚ´æµØÖ·¿ÕÖÃÁË.
+**** Understanding Pointers - Putting It Together
+- Ã¿¸öÖ¸Õë¶¼ÓÐÒ»¸öÖµ,¼´Ä³¸öÖ¸¶¨ÀàÐÍ¶ÔÏóµÄµØÖ·. ÌØÊâµÄNULL(0)Öµ±íÊ¾¸ÃÖ¸ÕëÃ»ÓÐÖ¸ÏòÈÎºÎµØ·½.
+- Ö¸ÕëÓÃ&ÔËËã·û´´½¨.   lealÖ¸ÁîÊÇÉè¼ÆÓÃÀ´¼ÆËã´æ´¢Æ÷ÒýÓÃµÄµØÖ·µÄ,&ÔËËã·ûµÄ»úÆ÷´úÂëÊµÏÖ¾­³£ÓÃÕâÌõÖ¸ÁîÀ´¼ÆËã±í´ïÊ½µÄÖµ.
+- ²Ù×÷·ûÓÃÓÚÖ¸ÕëµÄ¼ä½ÓÒýÓÃ.  Æä½á¹ûÊÇÒ»¸öÖµ,ÀàÐÍÓë¸ÃÖ¸ÕëµÄÀàÐÍÏà¹Ø. ¼ä½ÓÒýÓÃÊÇÍ¨¹ý´æ´¢Æ÷ÒýÓÃÀ´ÊµÏÖµÄ,ÒªÃ´ÊÇ´æ´¢µ½Ò»¸öÖ¸¶¨µÄµØÖ·,ÒªÃ´ÊÇ´ÓÖ¸¶¨µÄµØÖ·¶ÁÈ¡.
+- Ö¸ÕëÓëÊý×é½ôÃÜÁ·Ï°.Ò»¸öÊý×éµÄÃû×Ö¿ÉÒÔÏñÒ»¸öÖ¸Õë±äÁ¿Ò»ÑùÒýÓÃ.(µ«²»ÄÜÐÞ¸Ä)
+- ½«Ö¸Õë´ÓÒ»ÖÖÀàÐÍÇ¿ÖÆ×ª»»³ÉÁíÒ»ÖÖÀàÐÍ,Ö»¸Ä±äËüµÄÀàÐÍ,¶ø²»¸Ä±äËüµÄÖµ.
+- Ö¸ÕëÒ²¿ÉÒÔÖ¸Ïòº¯Êý. ÕâÌá¹©ÁËºÜÇ¿´óµÄ´æ´¢ºÍÏò´úÂë´«µÝÒýÓÃµÄ¹¦ÄÜ.  º¯ÊýÖ¸ÕëµÄÖµÊÇ¸Ãº¯Êý»úÆ÷´úÂë±íÊ¾ÖÐµÚÒ»ÌõÖ¸ÁîµÄµØÖ·.
+#+BEGIN_SRC 
+int fun (int x , int *p);
+(int) (*fp) (int, int* );
+fp = fun;
+int y = 1;
+int result = fp(3,&y);
+#+END_SRC
+**** Using the GDB
+ÖµµÃÒ»¸ö¿ÎÌâÑÐ¾¿.
+**** 3.12 ´æ´¢Æ÷µÄÔ½½çÒýÓÃºÍ»º³åÇøÒç³ö.  Out-of-Bounds Memory References and Buffer Overflow
+***** ÖµµÃ·´¸´ÔÄ¶Á.  *important*
+ÏêÇé²Î¿¼ÊéÉÏµÄÀý×Ó,ÔÚº¯Êýµ÷ÓÃÊ±·ÖÅächar buf[8]; ¶øÈç¹û´æ´¢Ô½½çÔò»á²úÉúÈçÏÂÓ°Ïì.
+| char num | effect              |
+|      0-7 | none                |
+|     8-11 | ÆÆ»µ%ebx´æ´¢µÄÖµ |
+|    12-15 | ÆÆ»µ%ebp´æ´¢µÄÖµ |
+|    16-19 | ·µ»ØµØÖ·        |
+|      20+ | callderÖÐ±£´æµÄ×´Ì¬ |
+***** ÈçºÎ¶Ô¿¹Òç³ö
+*** x86-64 : Extending IA32 to 64 Bits .  :important: 
+È«Ãæ×Ü½á ,Éî¶ÈÕ¹Íû
+
+
+*** c  c++ java 
+ÔçÆÚ±àÒëC++Óë±àÒëC ·Ç³£ÏàËÆ,Êµ¼ÊÉÏ,C++µÄÔçÆÚÊµÏÖ¾ÍÖ»ÊÇ¼òµ¥µÄÖ´ÐÐÁË´ÓC++µ½CµÄÔ´µ½Ô´µÄ×ª»»,²¢¶Ô½á¹ûÔËÐÐC±àÒëÆ÷,²úÉúÄ¿±ê´úÂë.
+
+C++µÄ¶ÔÏóÓÃ½á¹¹À´±íÊ¾,ÀàËÆCµÄstruct. C++µÄ·½·¨ÊÇÓÃÖ¸ÏòÊµÏÖ·½·¨µÄ´úÂëµÄÖ¸ÕëÀ´±íÊ¾µÄ.
+
+Ïà¶Ô¶øÑÔ,JavaµÄÊµÏÖ·½Ê½ÍêÈ«²»Í¬,JavaµÄÄ¿±ê´úÂëÊÇÒ»ÖÖÌØÊâµÄ¶þ½øÖÆ±íÊ¾,³ÆÎªJava×Ö½Ú´úÂë.ÕâÖÖ´úÂë¿ÉÒÔ¿´³ÉÐéÄâ»úµÄ»úÆ÷¼¶³ÌÐò.
+
+ÐéÄâ»ú²¢²»ÊÇÖ±½ÓÓÃÓ²¼þÊµÏÖµÄ,¶øÊÇÓÃÈí¼þ½âÊÍÆ÷´¦Àí×Ö½Ú´úÂë,Ä£ÄâÐéÄâ»úµÄÐÐÎª. ÁíÍâÓÐÒ»ÖÖ³ÆÎª¼°Ê±±àÒë (Just-in-time compilation)µÄ·½·¨,¶¯Ì¬µØ½«×Ö½Ú´úÂëÐòÁÐ·­Òë³É»úÆ÷Ö¸Áî.µ±´úÂëÒªÖ´ÐÐ¶à´ÎÊ±(Ñ­»·),ÕâÖÖ·½·¨Ö´ÐÐÆðÀ´¸ü¿ì.¶øÇÒ¿çÆ½Ì¨.
