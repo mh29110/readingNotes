@@ -1,0 +1,230 @@
+#+BLOG: phantomjia
+#+POSTID: 76
+#+DATE: [2014-06-09 Mon 15:39]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY:  emacs
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: Emacs 相关笔记
+
+印象笔记上千后感觉同步和搜索很沉重,决定开始按主题整理到博客上,给印象笔记瘦身!
+君欲善其事,必先利其器. 第一个大主题是关于编辑器
+* Reference  
+- [[http://www.emacswiki.org/][Emacs wiki]] 
+- [[http://www.linuxidc.com/Linux/2012-08/68300.htm][GNU emacs 命令速查]] 
+- [[http://ergoemacs.org/emacs/emacs_kb_shortcuts.html][Emacs's Keybinding Layout Diagram]] 
+- [[http://www.slate.com/articles/technology/bitwise/2014/05/oldest_software_rivalry_emacs_and_vi_two_text_editors_used_by_programmers.2.html][vim and emacs]]
+- [[http://www.cnblogs.com/qlwy/archive/2012/06/15/2551485.html][图片显示与表格处理]]
+- [[http://orgmode.org/org.html][Org-mode]]
+* Installation and Configuration
+** 下载
+到这个网址可以下载到Emacs的windows版本：http://ftp.gnu.org/pub/gnu/emacs/windows/
+只需要一个压缩文档，如emacs-22.3-bin-i386.zip
+** 安装
+在D盘根目录下新建一个文件夹，取名Emacs22.2（也可以是其他路径，随个人喜好而定），将emacs-22.2-bin-i386.zip里的文件解压到这个目录下，这样在d:/Emacs22.2/下就有bin, tec, info, leim, lisp, site-lisp等目录。
+
+双击bin文件夹里的addpm.exe进行安装，安装后将在开始菜单生成Gnu-Emacs/Emacs链接，点击这个链接便可启动Emacs。也可以双击bin文件夹里的runemacs.exe启动。注意到bin目录里还有个文件是emacs.exe，双击它也可以启动，但是会出现一个控制台窗口
+** 修改注册表
+首先找到路径：HKEY_CURRENT_USER\Software\GNU\Emacs（如果没有该路径，则自行添加即可），然后新建字符串值HOME，赋值为你希望的路径，即：“HOME”=”你希望的路径”。 
+
+    -打开注册表，找到HKEY_LOCAL_MACHINE/SOFTWARE/GNU/Emacs（如果没有则手动添加项），在此项下添加字符串值，名称为HOME，值为D:/Emacs22.2。这样做的目的是让D:/Emacs22.2成为Emacs的home路径（传说中的home path，以后你将会经常看到“home目录”、“home directory”等等)-
+** 创建.emacs.d目录和.emacs文件
+相信.emacs.d目录和.emacs文件是困扰大家很久的问题了，其实有个简单的办法可以解决此问题。
+
+启动emacs，用鼠标点击Options菜单，随便点击一两个选项，比如点击一下Active Region Highlighting，然后点击Save Options。先不要担心你会破坏了什么东西，这样做的目的是让emacs自动创建.emacs.d目录以及.emacs文件！观察你的Emacs窗口最后一行，是否显示“Wrote d:/Emacs22.2/.emacs”？
+如果是的话就对了，当你选择Save Options的时候，Emacs会在home路径下产生.emacs文件，并把配置信息写进这个文件。现在看看你的d:/Emacs22.2/目录下是否产生了这两个东西？
+** 加载.el文件
+lisp目录下存放着lisp源文件（*.el）和已编译的lisp文件（*.elc），以后你也可以将自己的.el文件放在这个目录下，然后还要在.emacs文件插入相关语句。比如你有一个文件叫做abcd.el，将它复制到lisp目录下，然后打开.emacs文件插入一句(require 'abcd)就可以了（包括圆括号，不需要扩展名.el）。
+
+如果你不喜欢lisp文件夹，也可以自己新建一个，比如在home目录下建一个文件夹叫做xyz，然后把abcd.el放在xyz目录下，在.emacs文件插入以下两句：
+#+BEGIN_SRC 
+    (setq load-path (cons "~/xyz" load-path))
+    (require 'abcd)
+#+END_SRC
+
+第一句告诉emacs先加载你的xyz目录，第二句再加载abcd.el。注意“~/”是linux系统的用法，表示home目录。
+如果你和我一样在学习《Sams Teach Yourself Emacs in 24 Hours》这本书的话，我想你一定需要sams-lib.el这个文件！可以到这个网址下载：
+http://www.cs.virginia.edu/~wh5a/personal/Emacs/
+
+找到sams-lib.el之后右键点击“目标另存为”就可以了！
+* Shortcut key
+
+*强烈推荐一个命令速查网站*:
+[[http://www.linuxidc.com/Linux/2012-08/68300.htm][GNU emacs 命令速查]]
+** [[file:doc/pics/716ad72a6059252d8ffa656a369b033b5ab5b906.png][shortcut map]]
+** how to set the startup directory for emacs :
+[[file:doc/pics/Windows_7_gnu_emacs_shortcut_properties_2012-06-15.png][startup directory for emacs]]
+** shortcut notes: 
+	- C-c,C-x,C-v   : show picture in org-mode ,what you see is what you get.     need dlls in windows  
+	- Sexp – a sexp is a “symbolic expression” in Lisp
+	- DoWhatIMean – dwim 的意思!
+	- M-q 自动换行
+	- shift + LRUD arrow  : GTD status and priority.  org-mode
+	- M-; 切换注释     M-/ 自动补全
+	- M-o : *switch windows*
+	- speedbar  
+	- C-x r :bookmark     =>  l :list   |  m : set     |  b : jump to 
+	- recentf-open-file   :列出最近打开的文件
+	- winner-mode     C-c ,left/right      切换整个窗口的状态
+	- 根据文章来熟悉快捷键 .快速复习记忆.
+	- m-x tetris  snake    ;   
+	- m-x erc
+	- m-x dired
+	- M-RET <  C-RET  in org-mode   :   insert a new line at  cursor position  <  at the end of current branch.
+	- table-insert   #+TBLFM: $4 = $2*$3
+	- window-numbering-mode ..C-x C-j    ,root direct depend on the current dired.     =>   o : open file in another window , RET: open in current window.
+	- i don’t think that’s necessary.    turn on the CUA mode, under the menu 〖Options ▸ C-x/C-c/C-v Cut and Paste (CUA)〗. The CUA mode will activate the following shortcuts:
+
+      + 【Ctrl+x】 for cut
+      + 【Ctrl+c】 for copy
+      + 【Ctrl+v】 for paste
+      + 【Ctrl+z】 for undo (emacs 23 or later)
+
+	- paste string from clipboard into minibuffer in Emacs  M-y  ;  other-window  p;
+** Other skill
+命令 ls 可查看当前已打开的buffer
+命令 b num 可切换buffer (num为buffer list中的编号)
+:bn -- buffer列表中下一个 buffer
+:bp -- buffer列表中前一个 buffer
+:b# -- 你之前所在的前一个 buffer
+:b(name)  --切换到name的buffer.
+
+C-x,C-x  : region  start mark
+
+C-x , left right arrow :   switch buffers.
+
+[-] [x] [1/2] [%]  :  C-c,C-c ,toggle checkbox . 
+
+獲得幫助： C-h ，然後接著下列這些鍵：
+
+	* k －鍵盤設定為何？
+	* f －函式功能為何？
+	* m －在目前模式下的鍵盤設定為何？
+	* w －某個函式設定到哪個鍵上？
+	* a －和某個字串相關的函式？
+
+通用术语Emacs术语中文意思selectionRegion选定区域cutkill剪切pasteyank粘贴windowFrame窗口shortcutKeySequence快捷键
+
+M-q  :  自动换行
+
+C - x  , k    : kill buffer
+
+C - x  , b    : switch buffer
+
+c-x, c-f      :  进入目录模式:                 c-x,c-q ：dired edit   ， M-%  ：替换，未成功
+                d标记删除 ，x执行删除， + 新建文件夹 ， g  刷新 ， m mark   ，  u/U  unmark  ，  * /   ,    t     ,  R rename  , C copy ,
+
+c-x , c-b    :也可以进行 dx 删除，但buff对速度影响极小 ，   clean-buffer-list
+
+ido-mode  :  无法创建同名文件时 ，c-j   ，也可以c-f关闭提示
+
+c-x  ,c-q    :  read-only mode  switch  , enable/disenable
+
+c-c , arrow-left /right  :  切换关闭的窗口
+
+c-h  , k :  给定键位列出帮助信息                             ||    c-h , f       : 给定命令列出帮助信息
+c-h  ,i     : info                                                       ||    c-h  , t      :tutorial
+
+M-x auto-fill-mode RETURN 切换自动换行模式
+
+c-x,c-x    :切换插入点与当前位置.为什么会有选择状态?
+
+c- _  or  c-/   or  c-x ,u                  :undo     
+c-r                                             :redo    
+
+,xi   or  M-;   : comment-or-uncomment-lines      (渔)=> 使用c-h,f  查询  coment-or-uncomment-lines 中有写明绑定的快捷键!!!
+
+
+M-/    dabbrev-expand                   根据最相近的单词将单词补全，该单词始于这个字符串（如果没有你要找的单词，再次按M-/）
+
+C-x r m 添加书签
+C-x r b 跳到某个书签
+
+
+
+#+doc/pics/716ad72a6059252d8ffa656a369b033b5ab5b906.png http://phantomjia.files.wordpress.com/2014/06/wpid-716ad72a6059252d8ffa656a369b033b5ab5b906.png
+#+doc/pics/Windows_7_gnu_emacs_shortcut_properties_2012-06-15.png http://phantomjia.files.wordpress.com/2014/06/wpid-windows_7_gnu_emacs_shortcut_properties_2012-06-15.png
+* VIM   ( with evil-mode ) 
+** shortcut
++ vap vaw vab   : 快速选取
++ :set ls=2   一直显示当前文件名 
++ :e  /  :E   
++ :split  vim-windows-operating  supported by emacs 
++ 句子移动:     按 ( 移动到上一个句子     按 ) 移动到下一个句子
++ 段落移动：     按 } 移动到下一段     按 { 移动到上一段 
++ 用ma创建一个名为 a 的标记，移动光标到任一地方，
+    - 按下 'a （即单引号加上标记的名字），Vim跳到了标记的行的行首。
+    - 按下 `a （即上排数字键1左边那个键），Vim跳到做标记的位置。
+
++ 跳转：     ctrl-o 用来跳转到上一个位置。ctrl-i  用来再跳回到下一个位置。
++ 选取文本片段
+    按下v进入可视模式，按下ap选取一段（'a' 'p'aragraph）。按下~翻转这段文字的大小写。
+    其他的文本对象的助记符有：aw的意思是一个单词（'a' 'w'ord），a"的意思是一段引用（比如"this is a quoted string"），ab的意思是一块文本（'a' 'b'lock，小括号里的所有东西）等等。
++  ct<symbol >    :    change till <symbol> 
+                       http://www.cnblogs.com/way_testlife/archive/2010/10/08/1845300.html   以上4-8 参考于此
+
+** 帮助：
+- :help  阅读 :help 文档，
+    第一行是语法，第二行是解释这个命令的作用，第二段包含更多参考。
+- :helpgrep  在整个帮助文档中搜索一个词。
+    使用:cnext和:cprev移动到下一个或上一个匹配，使用:clist查看所有的匹配列表。
+- /#       =>  go to previous  
+
+
+- :%s/<from>/<to>/g                           =>   %(entire document range) 
+                                                         =>   s(substitute across entire document)
+                                                         =>   replacing  <from>  with <to>
+                                                         =>  g (substitute every occurrence on line rather than just first
+
+- f : 在日常编辑中可以用于快速定位 -配合  ； 向后检索
+
+- 10 == : 对10行进行对齐操作;
+
+- 10>> : 缩进10行
+
+- gg=G : 对齐操作整个文档
+
+- dt) : 一直删除到)
+
+- gf :open file under the cursor
+
+- gi :     if you left insert mode to go look at something elsewhere in the file, how can you get back to where you were and also back into insert mode
+
+- n + G : goto the n line.
+
+- c   + w  , 0, $   : change seleted part to ....
+
+- % :match ([{}])
+
+- y2/foo
+
+- gu gU : change to upper or lower case .
+
+- fa  : find a in this line .
+
+- da  : delete all the part before a in this line .
+
+- <>  : 
+
+- =   :auto indent
+
+- I , A , C , S :operate  to the whole lien.
+
+- () : move to next 句子...
+
+- /# , * : 读取光标处的字符串，并且移动光标到它再次出现的地方。
+
+- `.  :  move to last edit address.
+
+- f + 字母            :      在当前行中查找。
+- %                     :      匹配括号。
+- CTRL + G        :      显示当前行的信息。
+- :set number     :      :set nonumber    :set ruler
+- CTRL  EY  ; DU ; FB .
+
+- 【【  : 第一行
+-  】】  ：最后一行   --  shift+g
+
+- /string              :      查找“string”
+
+- ~/.vim/doc/usr_03.cnx" [readonly] line 369 of 579 --63%-- col 1  看到这里了

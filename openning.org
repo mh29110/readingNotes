@@ -1,0 +1,27 @@
+#+BLOG: phantomjia
+#+POSTID: 36
+#+DATE: [2014-05-13 Tue 10:19]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs, program
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: *openning* 
+
+* Programming on the fly
+-----------
+** *learning everyone*
+I have been a font-end programmer for  several years , and i really like this work very much.That's amazing world. During this process , i have learned alot but still not grasp skilled . soooo it's the right time to review and summarize them .
+	well , i'll list those skill which i have leared but still want a further study below :
+- cocos2d-x on osx  | using xcode & mac.           : publish my app on AppStore.
+- ActionScript 3.0 game programming .*my job* /advanced/
+- graphics programming, 3d and OpenGL .
+- emacs with evil-mode , org-mode for blog and GTD .#/justDoing/
+- git and version control advanced.  So big big project that has 500000 lines code.Every Detail!
+- MY PHANTOM  operating system !!! lol , this's so funny!
+- algorithm and Data structure.
+** *optimization of  SNS (Social Networking Services)
+*** twitter , facebook , instagram , spotify , stackoverflow , google+,etc.
+- understand the world , and let the world know me . 
+- sharing thoughts,news,infomation and jokes.
+- I think i have spend too many time  on these SNS .  LOL . 
+

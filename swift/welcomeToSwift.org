@@ -1,0 +1,229 @@
+#+BLOG: phantomjia
+#+POSTID: 56
+#+DATE: [2014-06-03 Tue 11:22]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs , swift
+#+TAGS: swiftBook
+#+DESCRIPTION:
+#+TITLE:1.Welcome to Swift    : The Swift Programming Language 
+
+本系列是博主翻译自swift官方文档  *The Swift Programming Language* , 转载请注明出处,请勿用于商业用途. 
+
+* 欢迎来到swift
+** *关于swift* 
+swift 是为了开发ios 和 os X 应用而生的一种新语言,它基于c语言和Objective-c开发,并且没有与C语言兼容的约束.Swift采用了安全编程模式,增加了更现代化的特色来使得编程更加简单,灵活和有趣. Swift是全新的,(空白的历史) 基于成熟的与有爱的cocoa和cocoa touch frameworks ,是一个重新界定如何进行软件开发的机会.
+
+Swift已经制作了数年.Apple奠定了swift的基础:优化了已有的编译器,调试器与框架等基础工具. 我们使用Automatic Reference Counting (ARC:自动引用技术)简化了内存管理.我们的基于Foundation和Cocoa的框架栈也更加现代化,更加标准化. Objective-C 本身已经进化到了支持blocks,collection literals, 和 模块,使其可以完美采用各种现代化语言的框架.感谢Objective-c打下的坚实基础,我们现在才可以向大家介绍这种用于苹果软件开发的新语言.
+
+Swift对于Objective-c开发者们来说会感觉非常熟悉.它采用了Objective-c中的易读的参数命名和动态对象模型等技术.对已有的Cocoa框架和Objective-c代码提供了无缝的混合搭配与交互处理.基于这些基础功能,Swift介绍了大量的新功能,同时集合面向对象编程与过程式编程的语言的部分.
+
+Swift对新加入的程序员非常友好.它是第一个工业级质量的系统编程语言同时也是非常有趣和卓越的脚本语言.它支持playgrounds ,这是一种革命式的新功能,允许程序员使用swift代码无需编译和运行就能得到所见即所得的效果.
+
+Swift从苹果工程师文化中结合了最好的现代语言思想.编译器为性能而优化,语言为开发而优化,两者绝不互相妥协. swift被设计成适用于简单如"Hello Wrold",复杂如整个操作系统的语言.所有的这些使得Swift对于开发者和苹果来说都是一个合理的未来投资方向.
+
+
+Swift是一种编写Ios与OsX极其出色的方式,而且会继续发展新的特色和功能.我们对于swift的目标是充满野心的.我们迫不及待的看到您使用它来改变世界.
+
+** A Swift Tour  (一段swift展示)
+*** 简介
+按照管理新语言的第一个程序应该是在屏幕上打印出"Hello World",在Swift中,这个可以一行搞定:
+:  println("Hello, world")
+如果你写过c或者O-c的代码,那么这个语言应该很熟悉.这一行代码就是完整的程序,你不需要导入(import)特殊的输入输出或者string库.代码写在程序的入口即全局范围内,所以你也不需要写明main函数.你甚至不需要在语句结束时写分号.
+
+这个示例已经给你了足够的信息来展示如何使用swift完成各种编程任务. 如果你有些地方不太明白也没关系,这本书的其余部分会解释给你.
+ *注意* 
+     为了获得最好的体验,在Xcode中把这个章节作为playground打开.Playground允许你编辑代码列表的同时马上获得结果.
+*** 简单变量 
+- 使用*let*创建常量,使用*var*创建变量. 常量在编译的时候不需要知道它的值,但是你只有一次机会给它赋值.这意味着你可以使用常量来命名一个值,使得它一次定义,多处使用.
+#+BEGIN_SRC 
+          var myVariable = 42
+          myVariable = 50
+          let myConstant = 42
+#+END_SRC
+
+- 要赋值的常量或者变量都需要指定类型.但是,你并不需要总是明确的写出类型.当你创建一个变量或者常量时你可以提供一个值,而让编译器推断它的类型.在上面的例子中,myVariable被一个整数初始化,所以 编译器推断myVariable是一个整数型.如果初始化的值不能提供足够多的信息来确定类型(或者没有初始化值),你可以在变量名后面使用':'来指定类型.
+#+BEGIN_SRC 
+          let implicitInteger = 70
+          let implicitDouble = 70.0
+          let explicitDouble: Double = 70
+#+END_SRC
+/练习/:
+    创建一个明确为Float类型的常量 ,其值为4 .
+
+- 变量绝不会隐式转换为其他类型.如果你需要转换变量类型,请明确的指定想要的类型.
+#+BEGIN_SRC 
+          let label = "The width is "
+          let width = 94
+          let widthLabel = label + String(width)
+#+END_SRC
+/练习/:
+     尝试移除String的显示类型转换,看得到什么错误?
+
+- 这是另外一种更简单的引用字符串值的方式.把值写到括号里,然后加上(\),例如:
+#+BEGIN_SRC 
+          let apples = 3
+          let oranges = 5
+          let appleSummary = "I have \(apples) apples."
+          let fruitSummary = "I have \(apples + oranges) pieces of fruit."
+#+END_SRC
+/练习/:
+    	Use \() to include a floating-point calculation in a string and to include someone’s name in a greeting.
+  
+- 使用([]) 来创建数组和字典. 在方括号中加上索引号或者键来操作它们的元素.
+#+BEGIN_SRC 
+          var shoppingList = ["catfish", "water", "tulips", "blue paint"]
+          shoppingList[1] = "bottle of water"
+           
+          var occupations = [
+              "Malcolm": "Captain",
+              "Kaylee": "Mechanic",
+          ]
+          occupations["Jayne"] = "Public Relations"
+#+END_SRC 
+  
+如果要创建一个空的数组或者字典,使用如下的初始化方法: 
+ #+BEGIN_SRC 
+          let emptyArray = String[]()
+          let emptyDictionary = Dictionary<String, Float>()
+ #+END_SRC 
+- 如果数组和字典中的信息可以被推断出,你可以把空数组简化为[] , 把空字典简化为[:],例如当你为一个变量设置一个新的值或者你要给函数传参时.
+: shoppingList = []   // Went shopping and bought everything.
+*** 流程控制
+- 使用if 和 switch来做条件判定,使用for-in,for,while 和 do-while来做循环.条件或者循环判定的变量是否加括号是可选的.判断执行的代码快的大括号是必须的.
+#+BEGIN_SRC 
+          let individualScores = [75, 43, 103, 87, 12]
+          var teamScore = 0
+          for score in individualScores {
+              if score > 50 {
+                  teamScore += 3
+              } else {
+                  teamScore += 1
+              }
+          }
+          teamScore
+
+#+END_SRC      
+在一个if语句中,条件判定必须是一个boolean表达式,这意味着 if score {...} 这样的代码块是错误的,这不能转化为与0的隐式比较.(类比与其他语言,会有这种隐式转换为boolean值的情况)
+
+- 你可以使用let 和if 来处理那些没有值的情况.这些值标识为可选的.一个可选的值可能含有一个值,也可能包含一个象征空值的nil. 在类型后面加上(?)来把这个值标记为可选的.
+#+BEGIN_SRC 
+          var optionalString: String? = "Hello"
+          optionalString == nil
+           
+          var optionalName: String? = "John Appleseed"
+          var greeting = "Hello!"
+          if let name = optionalName {
+              greeting = "Hello, \(name)"
+          }
+#+END_SRC
+
+/练习/
+    	Change optionalName to nil. What greeting do you get? Add an else clause that sets a different greeting if optionalName is nil.
+  
+如果可选值是nil,则条件不成立,大括号内的代码被跳过,否则可选值被打开并赋值给let后面的常量,代码快中的常量也随之可用. Switches 支持各种数据和范式的比较操作.
+#+BEGIN_SRC 
+          let vegetable = "red pepper"
+          switch vegetable {
+          case "celery":
+              let vegetableComment = "Add some raisins and make ants on a log."
+          case "cucumber", "watercress":
+              let vegetableComment = "That would make a good tea sandwich."
+          case let x where x.hasSuffix("pepper"):
+              let vegetableComment = "Is it a spicy \(x)?"
+          default:
+              let vegetableComment = "Everything tastes good in soup."
+          }
+#+END_SRC      
+/练习/
+    	Add another variable to keep track of which kind of number was the largest, as well as what that largest number was.
+- 使用while来重复执行代码块直到条件不成立.循环的条件可以在结束处设定,来确保这个循环至少执行一次.
+ #+BEGIN_SRC 
+          var n = 2
+          while n < 100 {
+              n = n * 2
+          }
+          n
+           
+          var m = 2
+          do {
+              m = m * 2
+          } while m < 100
+          m
+ #+END_SRC
+
+- 你可以使用 (..)来是索引号在某个范围内循环,也可以指定明确的初始化`条件`增量操作. 两者作用一样,示例如下:
+#+BEGIN_SRC 
+          var firstForLoop = 0
+          for i in 0..3 {
+              firstForLoop += i
+          }
+          firstForLoop
+           
+          var secondForLoop = 0
+          for var i = 0; i < 3; ++i {
+              secondForLoop += 1
+          }
+          secondForLoop
+#+END_SRC
+
+使用(..)来设定一个忽略上限值的范围, 而 使用(...)来设定一个包含上下限值的范围.  
+*** 函数与闭包
+- 使用func来声明一个函数.在函数名后跟括号来调用一个函数. 使用(->)来区别参数的名称类型列表与函数的范围类型列表.
+#+BEGIN_SRC 
+          func greet(name: String, day: String) -> String {
+              return "Hello \(name), today is \(day)."
+          }
+          greet("Bob", "Tuesday")
+#+END_SRC  
+ /练习/ 
+    	Remove the day parameter. Add a parameter to include today’s lunch special in the greeting.
+    	
+- 使用元组从函数中返回多重值.  
+#+BEGIN_SRC 
+          getGasPrices() -> (Double, Double, Double) {
+              return (3.59, 3.69, 3.79)
+          }
+          getGasPrices()
+#+END_SRC
+
+- 函数还可以把所有的参数存储于一个数组中.
+#+BEGIN_SRC 
+          func sumOf(numbers: Int...) -> Int {
+              var sum = 0
+              for number in numbers {
+                  sum += number
+              }
+              return sum
+          }
+          sumOf()
+          sumOf(42, 597, 12)
+#+END_SRC
+/练习/:
+    	Write a function that calculates the average of its arguments.
+    	
+    
+- 函数是可以嵌套的.嵌套函数有权利使用外层函数的变量.你可以使用嵌套函数来组织那些太长的或者太复杂的函数.
+#+BEGIN_SRC 
+          func returnFifteen() -> Int {
+              var y = 10
+              func add() {
+                  y += 5
+              }
+              add()
+              return y
+          }
+          returnFifteen()
+#+END_SRC
+
+  
+- 函数是一级类类型(first-class type) .这意味着函数可以做为参数,也可以作为函数返回值.
+#+BEGIN_SRC 
+          func makeIncrementer() -> (Int -> Int) {
+              func addOne(number: Int) -> Int {
+                  return 1 + number
+              }
+              return addOne
+          }
+          var increment = makeIncrementer()
+          increment(7)
+#+END_SRC      

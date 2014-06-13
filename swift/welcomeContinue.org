@@ -1,0 +1,360 @@
+#+BLOG: phantomjia
+#+POSTID: 65
+#+DATE: [2014-06-03 Tue 15:44]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs ,swift
+#+TAGS: swift
+#+DESCRIPTION:
+#+TITLE: 2.Welcome to Swift Continue: The Swift Programming Language
+* Welcome to Swift    -- /continue/
+A swift tour 在继续... :)
+** 对象与类  (Objects and Classes)
+*** 类的声明与使用
+**** 使用(class)关键字来定义一个类.类的属性的定义与常量或者变量的定义相同,不过它是在类的上下文中.方法和函数的定义也是同样的区别.
+#+BEGIN_SRC 
+          class Shape {
+              var numberOfSides = 0
+              func simpleDescription() -> String {
+                  return "A shape with \(numberOfSides) sides."
+              }
+          }
+#+END_SRC  
+  
+/练习/ : 
+        用let增加一个常量实例属性, 再增加一个有一个参数的方法.
+**** 创建一个类的实例的方式: 类名+圆括号.    使用(.)来处理实例的属性和方法.
+#+BEGIN_SRC 
+          var shape = Shape()
+          shape.numberOfSides = 7
+          var shapeDescription = shape.simpleDescription()
+#+END_SRC
+
+**** 上面版本的Shape类缺少了很重要的一个部分:当一个类的实例创建时所需要的初始化函数(构造器?译者). 使用init创建一个.
+#+BEGIN_SRC 
+          class NamedShape {
+              var numberOfSides: Int = 0
+              var name: String
+              
+              init(name: String) {
+                  self.name = name
+              }
+              
+              func simpleDescription() -> String {
+                  return "A shape with \(numberOfSides) sides."
+              }
+          }
+#+END_SRC  
+
+**** 注意self是怎么区分实例属性name和参数name的.当创建一个实例时,用于初始化的参数就像函数调用一样被传入init.每个实例属性都需要被赋值,要么在它声明时(如 numberOfSides),要么在初始化函数中(如 name).使用 deinit 来创建一个类似析构函数在类实例被删除前来执行清理操作.子类在自身类名后引入父类的名称,用一个colon(:)分割. There is no requirement for classes to subclass any standard root class, so you can include or omit a superclass as needed.子类的方法使用override-overriding来复写父类同名方法的实现. 如果没有指明override,编译器会检测为错误.如果子类标明override但是却没有能够复写仍然会报错.
+
+ #+BEGIN_SRC 
+          class Square: NamedShape {
+              var sideLength: Double
+              
+              init(sideLength: Double, name: String) {
+                  self.sideLength = sideLength
+                  super.init(name: name)
+                  numberOfSides = 4
+              }
+              
+              func area() ->  Double {
+                  return sideLength * sideLength
+              }
+              
+              override func simpleDescription() -> String {
+                  return "A square with sides of length \(sideLength)."
+              }
+          }
+          let test = Square(sideLength: 5.2, name: "my test square")
+          test.area()
+          test.simpleDescription()
+ #+END_SRC 
+/练习/ :
+        创建一个NameShape的子类:Circle , 构造器有两个初始化参数radius和name. 有两个方法area 和 describe.
+    	Make another subclass of NamedShape called Circle that takes a radius and a name as arguments to its initializer. Implement an area and a describe method on the Circle class.
+
+*** 类的读取器
+**** 除了用于存储的简单属性外,属性还可以提供getter和setter方法. 
+ #+BEGIN_SRC 
+          class EquilateralTriangle: NamedShape {
+              var sideLength: Double = 0.0
+              
+              init(sideLength: Double, name: String) {
+                  self.sideLength = sideLength
+                  super.init(name: name)
+                  numberOfSides = 3
+              }
+              
+              var perimeter: Double {
+              get {
+                  return 3.0 * sideLength
+              }
+              set {
+                  sideLength = newValue / 3.0
+              }
+              }
+              
+              override func simpleDescription() -> String {
+                  return "An equilateral triagle with sides of length \(sideLength)."
+              }
+          }
+          var triangle = EquilateralTriangle(sideLength: 3.1, name: "a triangle")
+          triangle.perimeter
+          triangle.perimeter = 9.9
+          triangle.sideLength
+ #+END_SRC 
+  
+***** 在Perimeter的setter中,新传入的值叫做newValue.你可以在set之后的括号内为传入的值提供一个明确的名字.
+注意:EquilateralTriangle类的构造器编写分为三个步骤:
+- 设置子类声明的属性值,
+- 调用父类的构造器,
+- 改变父类的属性的值,任何额外的使用方法,读取器进行的设置工作也在这里进行.
+
+**** willSet &  didSet
+  If you don’t need to compute the property but still need to provide code that is run before and after setting a new value, use willSet and didSet. For example, the class below ensures that the side length of its triangle is always the same as the side length of its square.
+  #+BEGIN_SRC 
+         class TriangleAndSquare {
+              var triangle: EquilateralTriangle {
+              willSet {
+                  square.sideLength = newValue.sideLength
+              }
+              }
+              var square: Square {
+              willSet {
+                  triangle.sideLength = newValue.sideLength
+              }
+              }
+              init(size: Double, name: String) {
+                  square = Square(sideLength: size, name: name)
+                  triangle = EquilateralTriangle(sideLength: size, name: name)
+              }
+          }
+          var triangleAndSquare = TriangleAndSquare(size: 10, name: "another test shape")
+          triangleAndSquare.square.sideLength
+          triangleAndSquare.triangle.sideLength
+          triangleAndSquare.square = Square(sideLength: 50, name: "larger square")
+          triangleAndSquare.triangle.sideLength
+  #+END_SRC
+
+***  类的方法:
+- 类的方法有非常重要的一点区别于函数.函数的参数名只能用于函数体内,但是方法的参数名还可以用于调用方法时(除了第一个参数). 默认的,一个方法的参数 在调用方法时 和 在方法体内要同名.你可以指定一个别名在函数体内使用.
+ #+BEGIN_SRC 
+          class Counter {
+              var count: Int = 0
+              func incrementBy(amount: Int, numberOfTimes times: Int) {
+                  count += amount * times
+              }
+          }
+          var counter = Counter()
+          counter.incrementBy(2, numberOfTimes: 7)
+
+ #+END_SRC
+- 当你使用可选值(optional values)时,你可以在方法,属性和下标(subscripting)前加上(?).如果在(?)前的值是nil,那么在(?)之后的任何事情都会被忽略,整个表达式的值会为nil.否则可选值会被打开并激活.两种情况都会让整个表达式变为一个可选值.
+#+BEGIN_SRC 
+          let optionalSquare: Square? = Square(sideLength: 2.5, name: "optional square")
+          let sideLength = optionalSquare?.sideLength
+#+END_SRC
+** 枚举 与 结构体 (*Enumerations and Structures*)
+*** 枚举 Enum
+**** 定义
+使用 enum 来创建一个枚举. 如同类和其他任何named types一样,枚举可以关联方法.
+#+BEGIN_SRC 
+           enum Rank: Int {
+              case Ace = 1
+              case Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten
+              case Jack, Queen, King
+              func simpleDescription() -> String {
+                  switch self {
+                  case .Ace:
+                      return "ace"
+                  case .Jack:
+                      return "jack"
+                  case .Queen:
+                      return "queen"
+                  case .King:
+                      return "king"
+                  default:
+                      return String(self.toRaw())
+                  }
+              }
+          }
+          let ace = Rank.Ace
+          let aceRawValue = ace.toRaw()
+#+END_SRC  
+  
+ /练习/: 
+ Write a function that compares two Rank values by comparing their raw values.
+**** 细节
+-  在上面的例子中,枚举的数据类型是Int,所以你只需要指定第一个标识符值,其余的标识符的值会按顺序分配.你也可以用字符串或者浮点型数字作为标识符的类型.你可以使用toRaw和fromeRaw在标识符值和枚举值之间转换.
+#+BEGIN_SRC 
+          if let convertedRank = Rank.fromRaw(3) {
+              let threeDescription = convertedRank.simpleDescription()
+          }
+#+END_SRC
+
+  
+- 枚举成员的值是确切的值,而不是标识符值的另外一种写法. 事实上,很多情况下他们都不是有意义的标识符值,你不需要一定提供这个值.
+#+BEGIN_SRC 
+          enum Suit {
+              case Spades, Hearts, Diamonds, Clubs
+              func simpleDescription() -> String {
+                  switch self {
+                  case .Spades:
+                      return "spades"
+                  case .Hearts:
+                      return "hearts"
+                  case .Diamonds:
+                      return "diamonds"
+                  case .Clubs:
+                      return "clubs"
+                  }
+              }
+          }
+          let hearts = Suit.Hearts
+          let heartsDescription = hearts.simpleDescription()
+#+END_SRC      
+/练习/ :
+    	Add a color method to Suit that returns “black” for spades and clubs, and returns “red” for hearts and diamonds.
+/注意/ :    
+Notice the two ways that the Hearts member of the enumeration is referred to above: When assigning a value to the hearts constant, the enumeration member Suit.Hearts is referred to by its full name because the constant doesn’t have an explicit type specified. Inside the switch, the enumeration is referred to by the abbreviated form .Hearts because the value of self is already known to be a suit. You can use the abbreviated form anytime the value’s type is already known.
+*** struct 结构体
+**** 定义
+使用struct关键字来创建结构体.结构体支持很多类似类的行为,包括方法和构造器.他们之间最大的不同是结构体在程序中传递时只能通过复制自身,而类可以通过引用传递.
+#+BEGIN_SRC  
+          struct Card {
+              var rank: Rank
+              var suit: Suit
+              func simpleDescription() -> String {
+                  return "The \(rank.simpleDescription()) of \(suit.simpleDescription())"
+              }
+          }
+          let threeOfSpades = Card(rank: .Three, suit: .Spades)
+          let threeOfSpadesDescription = threeOfSpades.simpleDescription()
+ #+END_SRC      
+
+/练习/ :
+    	Add a method to Card that creates a full deck of cards, with one card of each combination of rank and suit.
+**** 细节 
+一个枚举成员的实例有它本身分配的值.同一个枚举成员的多个实例可以有不同的值.在创建实例时,你可以给它分配枚举值.枚举值和标识符值是不一样的:标识符值对于这个枚举成员的所有实例都一样,当你定义枚举时就确定了这个值.例如:考虑从服务器上请求sunset和sunrise.服务器可能回应这个信息,也可能回应一个错误.
+#+BEGIN_SRC 
+          enum ServerResponse {
+              case Result(String, String)
+              case Error(String)
+          }
+           
+          let success = ServerResponse.Result("6:00 am", "8:09 pm")
+          let failure = ServerResponse.Error("Out of cheese.")
+           
+          switch success {
+          case let .Result(sunrise, sunset):
+              let serverResponse = "Sunrise is at \(sunrise) and sunset is at \(sunset)."
+          case let .Error(error):
+              let serverResponse = "Failure...  \(error)"
+              }
+#+END_SRC  
+/练习/ :
+add a third case to ServerResponse and to the switch.
+
+Notice how the sunrise and sunset times are extracted from the ServerResponse value as part of matching the value against the switch cases.
+
+** 原型和扩展 (rotocols and Extensions)
+***  定义
+Use protocol to declare a protocol.
+  #+BEGIN_SRC 
+           protocol ExampleProtocol {
+              var simpleDescription: String { get }
+              mutating func adjust()
+          }
+  #+END_SRC
+ 
+Classes, enumerations, and structs can all adopt protocols.
+     #+BEGIN_SRC 
+           class SimpleClass: ExampleProtocol {
+              var simpleDescription: String = "A very simple class."
+              var anotherProperty: Int = 69105
+              func adjust() {
+                  simpleDescription += "  Now 100% adjusted."
+              }
+          }
+          var a = SimpleClass()
+          a.adjust()
+          let aDescription = a.simpleDescription
+           
+          struct SimpleStructure: ExampleProtocol {
+              var simpleDescription: String = "A simple structure"
+              mutating func adjust() {
+                  simpleDescription += " (adjusted)"
+              }
+          }
+          var b = SimpleStructure()
+          b.adjust()
+          let bDescription = b.simpleDescription
+     #+END_SRC 
+Experiment
+     write an enumeration that conforms to this protocol
+   Notice the use of the mutating keyword in the declaration of SimpleStructure to mark a method that modifies the structure. The declaration of SimpleClass doesn’t need any of its methods marked as mutating because methods on a class can always modify the class.
+*** Extension
+Use extension to add functionality to an existing type, such as new methods and computed properties. You can use an extension to add protocol conformance to a type that is declared elsewhere, or even to a type that you imported from a library or framework.
+     #+BEGIN_SRC 
+          extension Int: ExampleProtocol {
+              var simpleDescription: String {
+              return "The number \(self)"
+              }
+              mutating func adjust() {
+                  self += 42
+              }
+          }
+          7.simpleDescription
+     #+END_SRC 
+
+    	Experiment
+    	Write an extension for the Double type that adds an absoluteValue property.
+  
+*** You can use a protocol name just like any other named type—for example, to create a collection of objects that have different types but that all conform to a single protocol. When you work with values whose type is a protocol type, methods outside the protocol definition are not available.
+#+BEGIN_SRC 
+          let protocolValue: ExampleProtocol = a
+          protocolValue.simpleDescription
+#+END_SRC
+         Even though the variable protocolValue has a runtime type of SimpleClass, the compiler treats it as the given type of ExampleProtocol. This means that you can’t accidentally access methods or properties that the class implements in addition to its protocol conformance.
+
+** 泛型  (generics)
+- 把一个名字写在尖括号中来创建一个泛型函数或者类型.
+     #+BEGIN_SRC 
+           func repeat<ItemType>(item: ItemType, times: Int) -> ItemType[] {
+              var result = ItemType[]()
+              for i in 0..times {
+                  result += item
+              }
+              return result
+          }
+          repeat("knock", 4)
+     #+END_SRC 
+- 你可以创建各种形式的函数和方法的泛型,还有类,枚举和结构体的泛型. 
+     #+BEGIN_SRC 
+           // Reimplement the Swift standard library's optional type
+          enum OptionalValue<T> {
+              case None
+              case Some(T)
+          }
+          var possibleInteger: OptionalValue<Int> = .None
+          possibleInteger = .Some(100)
+     #+END_SRC 
+- 在泛型后面使用where关键字来指定一个关于泛型的条件需求列表. 比如 : 要求这个类型必须实现某个原型,要求两个类型必须一致 ,或者要求类必须有某个指定的父类.
+     #+BEGIN_SRC 
+           func anyCommonElements <T, U where T: Sequence, U: Sequence, T.GeneratorType.Element: Equatable, T.GeneratorType.Element == U.GeneratorType.Element> (lhs: T, rhs: U) -> Bool {
+              for lhsItem in lhs {
+                  for rhsItem in rhs {
+                      if lhsItem == rhsItem {
+                          return true
+                      }
+                  }
+              }
+              return false
+          }
+        anyCommonElements([1, 2, 3], [3])
+     #+END_SRC 
+ 
+   Experiment
+    	Modify the anyCommonElements function to make a function that returns an array of the elements that any two sequences have in common.
+
+- 为了简化,你可以在原型和类的名称后面加一个(:) 来省略where关键字 .使用 <T:Equatable> 和使用 <T where T: Equatable>是一样的.

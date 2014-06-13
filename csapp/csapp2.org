@@ -1,7 +1,7 @@
 #+BLOG: phantomjia
 #+POSTID: 85
 #+DATE: [2014-06-10 Tue 09:30]
-#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+OPTIONS: toc:t num:t todo:nil pri:nil tags:nil ^:nil TeX:nil
 #+CATEGORY: org2blog, emacs
 #+TAGS: reading
 #+DESCRIPTION:

@@ -1,0 +1,82 @@
+#+BLOG: phantomjia
+#+POSTID: 105
+#+DATE: [2014-06-12 Thu 09:29]
+#+OPTIONS: toc:t num:t todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS: reading
+#+DESCRIPTION:
+#+TITLE: Computer Systems A Programmer’s Perspective II (深入理解计算机系统 第四章 ）
+
+*** Chapter four   Processor Architecture 
+
+* 处理器体系结构
+
+** ISA  Instruction-Set Architecture  指令集体系结构.
+一个处理器支持的指令和指令的字节级编码称为它的指令集体系结构.  它使得在编译器编写者和处理器设计人员之间提供了一个概念抽象层.
+
+*** 'Y86' 指令集   . DIY
+预备知识 :ＨＣＬ　Hardware control language .  硬件控制语言.
+我们的Y86处理器结构有:
+**** 8个程序寄存器  每个存储一个字.
+| %eax | %ecs | %edx | %ebx | %esi | %edi | %esp | %ebp |
+|------+------+------+------+------+------+------+------|
+ 寄存器%esp被入栈,出栈,调用和返回指令作为栈指针.
+**** condition code   三个一位的条件码 ZF,SF,OF.
+**** PC  程序计数器 存放当前正在执行指令的地址.
+**** 存储器 从概念上就是一个很大的字节数组,保存着程序和数据,Y86程序用虚拟地址来引用存储器位置.硬件和操作系统软件联合把虚拟地址翻译为物理地址,指明数据实际保存在存储器的哪个地方.
+[[file:imgs/y86cpu.png]]
+**** 状态码  Stat  表明程序执行的总体状态,指示是正常运行还是出现了某种异常.
+*** Y86 指令 . *instruction*
+[[file:imgs/4y86instruction.png]]  [[file:imgs/registerindex.png]]
+例如: 用十六进制表示指令 rmmovl %esp ,0x12345(%edx) 的字节编码.从上图4-2看到rmmovl的第一个字节是40. 源寄存器%esp编码放在rA字段,基址寄存器%edx编码放在rB字段中.根据图4-4的寄存器编号,我们得到寄存器指示符字节42. 最后偏移量编码放在4字节的常数字中. 
+ 转换常数字=>  首先补零把0x12345变成4个字节:00 01 23 45 ,反序后 连接上面的编码,得出指令编码:  40 42 45230100 .
+*** Y86 异常处理  Exceptions  
+ 对于Y86来说,状态码 Stat描述程序执行的总体状态. 
+ | value | name | meaning          | description                            |
+ |-------+------+------------------+----------------------------------------|
+ |     1 | AOK  | 正常操作         |                                        |
+ |     2 | HLT  | 处理执行halt指令 |                                        |
+ |     3 | ADR  | 遇到非法地址     | 处理器试图从一个非法存储器地址读或者写 |
+ |     4 | INS  | 遇到非法指令     |                                        |
+*** 异常会调用一个异常处理程序  /Exception Handler/
+*** 解析一段Y86汇编代码. :important:  强烈推荐4.1.5
+#+imgs/y86cpu.png http://phantomjia.files.wordpress.com/2014/06/wpid-y86cpu.png
+#+imgs/4y86instruction.png http://phantomjia.files.wordpress.com/2014/06/wpid-4y86instruction.png
+#+imgs/registerindex.png http://phantomjia.files.wordpress.com/2014/06/wpid-registerindex.png
+** HCL 逻辑设计和硬件控制语言.
+硬件设计中,用电子电路来计算对位进行运算的函数,以及在各种存储器元素中存储位. 大多数现代电路技术都是用信号线上的高低电压来表示不同的位值. 逻辑1是用1.0伏特左右的高电压表示,逻辑0是用0.0伏特左右的低电压表示.实现一个数字系统需要三个主要组成部分:
+- 计算对位进行操作的函数的组合逻辑
+- 存储位的存储器元素
+- 控制存储器元素更新的时钟信号.
+
+*** 逻辑门
+ 逻辑门是数字电路的基本计算元素.
+*** 组合电路 & 字级组合电路 & 集合关系
+ * 通过将逻辑门组合成大的网,可以构造出能计算更加复杂函数的组合电路.
+ * 执行字级计算的组合电路根据输入字的各个位,用逻辑门来计算输出字的各个位.  如字级抽象表示为bool Eq = (A==B);位级抽象上是对比32位每个位是否相等.
+***  存储器和时钟
+组合电路从本质上不存储任何信息.只是简单地响应输入信号,产生等于输出的某个函数的输出.
+为了产生 /Sequential circuit/ ,也就是有状态并且在这个状态上进行计算的系统,我们必须引入按位存储信息的设备. 存储设备应该由同一个时钟控制,时钟是一个周期性信号,决定何时把新值加载到设备中.
+- 时钟寄存器     (寄存器)                    存储单个位或字. 时钟信号控制寄存器加载输入值.
+- 随机访问存储器 (存储器)                    存储多个字,用地址来选择该读/写哪个字.例如:
+  1) CPU的虚拟存储器系统.
+  2) 寄存器文件.在Y86中寄存器文件有8个程序寄存器 (%eax,%ecx等).
+  3) 注意区分 硬件寄存器 和 程序寄存器.
+- Y86处理器会用时钟寄存器保存程序计数器PC,条件代码CC 和程序状态Stat. 时钟寄存器属于硬件寄存器.
+- 寄存器文件 可以是多端口随机访问存储器,允许同时进行多个读写操作. 其电路可以读多个程序寄存器的值,同时更新多个程序寄存器的状态.每个端口都有一个地址输入,标明选择哪个程序寄存器,和一个数据来对应输入输出值.
+*** 具体参考下图
+[[file:imgs/registerfile.png]]
+** Sequential Y86 Implementations Y86的顺序实现.
+*** SEQ处理器 .     :important:
+处理一条指令包括很多操作,各个阶段和操作简略描述如下:                               function(计) :功能
+1) fetch    从寄存器读取指令字节,地址为程序寄存器PC的值. 指令符字节包括两部分 icode(指令代码) 和 ifun(指令功能). 
+     它可能取出一个寄存器指示符字节,指明一个或两个寄存器操作数指示符rA和rB . 也可能取出一个四字节的常数字valC . 
+     它按顺序方式计算当前指令的下一条指令的地址valP. valP = PC的值加上已取出指令的长度.
+2) decode   译码阶段从寄存器文件读入最多两个操作数,得到值valA /& valB .通常读入指令rA 和rB字段指明的寄存器,不过有些指令是读寄存器%esp的.
+3) execute  算术/逻辑单元 *ALU* 要么根据ifun的值执行指令指明的操作,计算存储器引用的有效地址,要么增加减少栈指针.得到valE.也可能设置条件码,跳转等操作.
+4) memory   访存阶段可以将数据写入或读出存储器.valM.
+5) write back  最多可以写两个结果到寄存器文件.
+6) PC update  将PC设置为下一条指令的地址.
+
+
+#+imgs/registerfile.png http://phantomjia.files.wordpress.com/2014/06/wpid-registerfile.png
