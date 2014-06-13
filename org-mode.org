@@ -1,0 +1,144 @@
+#+BLOG: phantomjia
+#+POSTID: 42
+#+DATE: [2014-05-26 Mon 13:07]
+#+OPTIONS: toc:t num:t todo:t pri:nil tags:t ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs 
+#+TAGS:emacs
+#+DESCRIPTION: org-mode study.
+#+TITLE:  org-mode for beginners
+
+
+org-mode for beginners
+** reference
++ [[http://www.cnblogs.com/holbrook/archive/2012/04/12/2444992.html#sec-2-5][emacs study]]
++ [[http://i.linuxtoy.org/docs/guide/ch32.html][another]]
++ [[http://orgmode.org/manual/Installation.html#Installation][orgmode.org]]
+** synopsis 
+ org-mode : Your life in plain text.
+ Org-mode is for keeping notes , maintaining TODO lists , planning projects, and authoring documents with a fast and effective plain-text system .
+** installation 
+ org is part of recent distribution of GNU Emacs, so you normally don't need to install it.
+ look up this link if you need more infomation .[[http://orgmode.org/manual/Installation.html#Installation][installation]] 
+** simple operation
+*** title 
+ The title of the exported document is taken from the special line 
+ #+BEGIN_SRC 
+#+TITLE: this is the title of the document
+ #+END_SRC
+*** font 
+ - / /italic/ /
+ - * *Bold* *
+ - + +strickout+ +
+ - _ _underline_ _
+ - subscript :  H_2 o
+ - superscript : E=mc^2
+*** list
+**** org knows ordered lists,unordered lists , and description lists.
+- Unordered list items start with "-" ,"+" or "*" as bullets.
+- Ordered list items start with a numeral followed by either a period or a right parenthesis ,such as '1.' or '1)'.If you want a list to start with a different value (e.g.,20), start the text of the item with [@20].
+- Description list items are unordered list items , and contain the separator '::' to distinguish the description term from the description.
+**** example for list 
+#+begin_example 
+  **** Lord of the Rings
+   My favorite scenes are (in this order)
+   1. The attack of the Rohirrim
+   2. Eowyn's fight with the witch king
+      + this was already my favorite scene in the book
+      + I really like Miranda Otto.
+   3. Peter Jackson being shot by Legolas
+      - on DVD only
+      He makes a really funny face when it happens.
+ORG-LIST-END-MARKER
+   But in the end, no individual scenes matter but the film as a whole.
+   Important actors in this film are:
+   - Elijah Wood :: He plays Frodo
+   - Sean Austin :: He plays Sam, Frodo's friend.  I still remember
+     him very well from his role as Mikey Walsh in The Goonies.
+ORG-LIST-END-MARKER
+#+end_example
+  **** Lord of the Rings
+   My favorite scenes are (in this order)
+   1. The attack of the Rohirrim
+   2. Eowyn's fight with the witch king
+      + this was already my favorite scene in the book
+      + I really like Miranda Otto.
+   3. Peter Jackson being shot by Legolas
+      - on DVD only
+      He makes a really funny face when it happens.
+ORG-LIST-END-MARKER
+   But in the end, no individual scenes matter but the film as a whole.
+   Important actors in this film are:
+   - Elijah Wood :: He plays Frodo
+   - Sean Austin :: He plays Sam, Frodo's friend.  I still remember
+     him very well from his role as Mikey Walsh in The Goonies.
+ORG-LIST-END-MARKER
+*** TODO shortcut key
+*** *Metadata embeded* *important*
+**** org-mode metadata list:
+#+BEGIN_EXAMPLE
+s    #+begin_src ... #+end_src 
+e    #+begin_example ... #+end_example  : 单行的例子以冒号开头
+q    #+begin_quote ... #+end_quote      通常用于引用，与默认格式相比左右都会留出缩进
+v    #+begin_verse ... #+end_verse      默认内容不换行，需要留出空行才能换行
+c    #+begin_center ... #+end_center 
+l    #+begin_latex ... #+end_latex 
+L    #+latex: 
+h    #+begin_html ... #+end_html 
+H    #+html: 
+a    #+begin_ascii ... #+end_ascii 
+A    #+ascii: 
+i    #+index: line 
+I    #+include: line
+#+END_EXAMPLE
+1. The first letter of each item of the above list is shortcut key .
+   e.g., input "<s" and TAB .
+2. using the parameters for code block.
+   #+BEGIN_EXAMPLE
+   #+begin_src c -n -t -h 7 -w 40
+
+#+end_src
+其中：
+c : the added language.
+-n : show the line numbers 
+-t : clean the format 
+-h 7 set width 7 -w 40 set height 40
+   #+END_EXAMPLE
+3. comment 
+   - start with "#"
+
+   #+BEGIN_EXAMPLE
+   #+BEGIN_COMMENT
+   # block comment 
+   ...
+   #+END_COMMENT
+   #+END_EXAMPLE
+4. table and image
+
+#+CAPTION: This is the caption for the next table (or link)
+     #+NAME:cross
+| e.g.  | table      |
+| name  | basic-data |
+| cross | reference  |
+
+For Org mode tables, the lines before the first horizontal separator line will become table header lines. You can use the following lines somewhere before the table to assign a caption and a label for *cross references*, and in the text you can refer to the object with [[cross]]:
+1. include file 
+   #+BEGIN_EXAMPLE
+   #+INCLUDE: "~/emacs" src emacs-lisp
+   #+END_EXAMPLE
+2. document metadata
+   1. H   ,
+   2. num   , 
+   3. toc , (create table of contents)
+   4. creator
+   5. link up ; link home
+*** *Table* (important)
+**** C-c |
+**** C-c , C-c
+**** Tab & RET           : move to next region or next row
+**** C-c - & C-c RET     : add the horizontal line
+**** C-c ^               : sort by column
+*** LINK
+*** cut-off line 
+"-" more than five will been translated to horizontal cut-off line.
+*** TAG
+** publish 

@@ -1,7 +1,7 @@
 #+BLOG: phantomjia
 #+POSTID: 65
 #+DATE: [2014-06-03 Tue 15:44]
-#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+OPTIONS: toc:nil num:t todo:nil pri:nil tags:nil ^:nil TeX:nil
 #+CATEGORY: org2blog, emacs ,swift
 #+TAGS: swift
 #+DESCRIPTION:
