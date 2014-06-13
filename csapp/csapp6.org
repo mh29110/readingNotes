@@ -101,3 +101,4 @@ for循环具有很好的空间局部性和时间局部性.
 ** The Memory Hierarchy
 [[file:imgs/hierarchy.png]]
 ** Cache Memories
+#+imgs/hierarchy.png http://phantomjia.files.wordpress.com/2014/06/wpid-hierarchy.png
