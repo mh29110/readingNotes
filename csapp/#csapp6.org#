@@ -1,0 +1,104 @@
+#+BLOG: phantomjia
+#+POSTID: 116
+#+DATE: [2014-06-13 Fri 09:37]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS: reading
+#+DESCRIPTION:
+#+TITLE:  Computer Systems A Programmer’s Perspective II (深入理解计算机系统 第六章 ）
+
+*** 存储器层次结构
+
+* The Memory Hierarchy
+*** Memory System 
+**** 存储器系统实际上并非一个线性的字节数组,它是一个具有不同容量,成本和访问时间的存储设备的层次结构.  
+- Cpu寄存器保存着最常用的数据.
+- Cache Memory ,高速缓存存储器作为一部分存储在相对慢速的主存(main memory)中的数据和指令的缓冲区域.
+- Main Memory  ,暂时存放存储在容量较大的,慢速磁盘上的数据.
+- 磁盘也常常作为存储在通过网络连接的其他机器的磁盘或磁带上的数据的缓冲区域.
+**** 访问不同层次的数据,速度差别非常大
+| space         | cpu register | cache | main memory | disk        |
+|---------------+--------------+-------+-------------+-------------|
+| access period |            0 |  1-30 |      50-200 | 10,000,000+ |
+
+** Storage Technologies
+
+*** RAM (Random-Access-Memory).
+SRAM 比DRAM 更快.
+1) static RAM 
+   可做高速缓存存储器,将每个位存储在一个双稳态bistable的存储器单元里.每个单元用一个六晶体管电路来实现. 参考 倒转的钟摆 模型.
+2) dynamic RAM
+   主存以及图形系统的帧缓冲区.将每个位存储为对一个电容的充电.每个单元由一个电容和一个访问晶体管组成.不稳定容易受干扰.
+   |      | 晶体管数 | 相对访问时间 | 持续性 | 敏感 | 相对花费 | 应用           |
+   | SRAM |        6 |            1 | Y      | N    |      100 | 高速缓存存储器 |
+   | DRAM |        1 |           10 | N      | Y    |        1 | 主存,帧缓冲区  |
+3) 传统的DRAM 访问
+   芯片的单元访问 . 重点,重读.
+4) memory module . 
+DRAM芯片包装在存储器模块中,插到主板的扩展槽上. 常见的包装包括168个引脚的双列直插存储器模块 ( Dual Inline Memory Moedule,DIMM),它以64位为块传送数据到存储控制器和从存储控制器传入数据.  例如下图
+[[file:imgs/memory1.png]]
+
+基本思想,上图示例模块中用8个64M bit的DRAM芯片,总共存储64MB(兆字节),芯片编号0-7. 每个超单元存储主存的一个字节.而相应超单元地址同为(i,j)的8个超单元来表示主存中字节地址为A处的64位双字.
+要读取存储器地址A处的一个64位字节,存储控制器将A转换成一个超单元地址(i,j),并发送到存储器模块,然后存储器模块再将i,j广播到每个DRAM . 每个DRAM输出它的(i,j)超单元的8位内容.  模块中的电路收集这些输出,把它们合并成一个64位双字,再返回给存储控制器.
+
+**** 技术发展
+
+**** 非易失性存储器
+- PROM
+- ROM
+- flash memory    |   Solid State Disk ,SSD 
+**** 访问主存
+数据流通过总线(Bus)的共享电子电路在处理器和DRAM主存之间传输.
+*** Disk Storage
+**** structure 构造.
+- 磁盘是由盘片 Platter 构成的.每个(Platter)有两面或者称为表面(surface),表面覆盖着磁性记录材料.
+- Platter中央有一个可以旋转的主轴(Spindle). 它使得盘片以固定的旋转速率旋转.通常是5400-15000转每分钟. (Revolution per Minute ,RPM)
+- 每个表面由一组磁道(track)的同心圆组成的.每个磁道被划分为一组扇区(sector).每个扇区包含相同数量的数据位.(通常是512字节).
+- 扇区之间由一些间隙(gap)隔开.间隙存储用于标识扇区的格式化位.
+#+imgs/memory1.png http://phantomjia.files.wordpress.com/2014/06/wpid-memory1.png
+1) 柱面 ,是相同编号的磁道的合集.
+2) 磁盘容量 
+   由记录密度,磁道密度和面密度决定.
+   | 磁盘容量         | 扇区字节数 | 磁道盘区数 | 表面磁道数 | 盘片表面数 | 磁盘盘片数 |
+   | 以上共计30.72GB. | 512字节    | 300扇区    | 20000磁道  |          2 | 5盘片      |
+**** 磁盘操作. 
+磁盘用 读写磁头( read/write head) 来读写存储在磁性表面的位,磁头连接在一个传动臂(actuator)一端.
+磁头在磁盘表面高度约0.1微米处的一层薄薄的气垫上飞翔,速度80km/h. !!!!!
+1. seek time                  寻道
+2. rotational latency         旋转
+3. transfer time.             传送
+4. 访问一个磁盘扇区中的512个字节的时间主要是寻道时间和旋转延迟, 而找到后访问连续后续字节几乎不用时间.
+**** 逻辑磁盘块 磁盘控制器维护着逻辑块号和实际(物理)磁盘扇区之间的映射关系.
+当操作系统想要执行一个I/O操作时,例如读取,操作系统会发送一个命令到磁盘控制器,让它读取某个逻辑块号,控制器上的固件执行一个快速表查找,将一个逻辑块号翻译成一个(盘面,磁道,扇区)的三元组.此三元组唯一的标识了对应的物理扇区.控制器依据三元组控制磁头移动到适当的柱面,等待扇区移动到磁头下,将读写头感知到的位放到控制器上的一个小缓冲区中,然后拷贝到主存中.
+**** 连接到I/O设备
+像图形卡,监视器,鼠标键盘和磁盘这样的I/O设备,都是通过I/O总线,例如intel的外围设备互连(PCI)总线连接到CPU和主存的.
+三种总线:
+1. 存储器总线,
+2. 系统总线,
+3. I/O总线   包括USB通用串行总线; 图形卡适配器;主机总线适配器
+[[file:imgs/bus.png]]
+
+
+#+imgs/bus.png http://phantomjia.files.wordpress.com/2014/06/wpid-bus.png
+** Locality
+局部性原理 (principle of  locality)   编写良好的程序有良好的局部性,倾向于引用邻近于其他最近引用过的数据项的数据项或者本身.  持久的概念
+- 时间局限性.
+- 空间局限性.
+- 硬件上的高速缓存存储器来保存最近被引用的指令和数据项.  
+- 操作系统级局部性原理允许系统使用主存作为虚拟地址空间最近被引用块的高速缓存.
+- 主存也用来缓存磁盘文件系统中最近被引用的磁盘块.
+- 程序设计中,web浏览器把最近引用的网页缓存在本地,时间局限性.
+
+*** Locality of References to Program Data .
+
+*** Locality of Instruction Fetches . 取指令的局部性.
+for循环具有很好的空间局部性和时间局部性.
+
+*** summary
+1. 重复引用同一个变量的程序有良好的时间局部性.
+2. 对于具有步长为k的引用模式的程序,步长越小,空间局部性越好
+3. 对于取指令来说,循环有很好的时间和空间的局部性.循环体越小,迭代次数越多则局部性越好.
+** The Memory Hierarchy
+[[file:imgs/hierarchy.png]]
+** Cache Memories
+#+imgs/hierarchy.png http://phantomjia.files.wordpress.com/2014/06/wpid-hierarchy.png
