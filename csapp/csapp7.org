@@ -1,0 +1,90 @@
+#+BLOG: phantomjia
+#+POSTID: 130
+#+DATE: [2014-06-16 Mon 13:07]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: Computer Systems A Programmer’s Perspective III (深入理解计算机系统 第七章 ）
+
+*** 链接
+* Linking
+Linking是将各种代码和数据部分收集起来并组合成一个单一文件的过程,这个文件可被加载到存储器并运行.
+*** 链接的时机:
+1) 链接可以执行与编译时(compile time) , 即源代码被翻译成机器代码时.
+2) 也可以执行于加载时(load time) , 即程序被加载器(loader)加载到存储器并执行时.
+3) 甚至执行于运行时(run time),由应用程序来执行.
+
+** Compiler Drivers
+编译器驱动程序.
+#+BEGIN_SRC 
+    gcc -o2 -g -o p main.c swap.   //  -v 查看编译过程
+    cpp [other arguments] main.c /tmp/main.i    //c预处理器 , 翻译成 ascii码的中间文件.        .i
+    cc1 tmp/main.i main.c -o2 [other arguments] -o tmp/main.s    //c编译器 , 翻译成ascii码的汇编语言文件.      .s  (cygwin没这命令?)
+    as [other arguments] -o tmp/main.o tmp/main.s           //驱动程序运行汇编器 as,     翻译成可重定位目标文件.       .o
+    ld -o  p.exe [system object files and args] tmp/main.o tmp/swap.o          //链接各个.o文件,生成可执行文件p
+    unix> ./p     //外壳调用os中一个叫加载器(loader)的函数,拷贝可执行文件p中的代码和数据到存储器,然后控制转移到程序的开头.
+#+end_src
+
+** static linking
+以一组可重定位目标文件和命令行参数作为输入,生成一个*完全链接的*可加载和运行的可执行目标文件作为输出.
+链接器必须完成两个主要任务:
+- 符号解析 (symbol resolution) . ---- 将每个符号引用刚好和一个符号定义联系起来.
+- 重定位   (relocation) .   ----编译器和连接器生成从地址0开始的代码和数据节.链接器通过把每个符号定义与一个存储器位置关联,然后修改所有对这些符号的引用,使它们指向这个存储器位置,从而重定位这些sector.
+
+** object files
+目标文件有三种形式:
+ 1) 可重定位目标文件. 
+ 2) 可执行目标文件.
+ 3) 共享目标文件.
+| coff | common object file format      | 早期unix版本使用 |
+| pe   | portable executable            | windows nt       |
+| elf  | executable and linkable format | 现代unix使用     |
+|------+--------------------------------+------------------|
+** relocatable object files                   可重定位目标文件
+[[file:imgs/ELF.png]]
+| .text     | 已编译程序的机器代码                         |
+| .rodata   | 只读数据,如printf的格式串和开关语句跳转表    |
+| .data     | 已初始化的全局C变量                          |
+| .bss      | 未初始化的全局C变量,在目标文件中不占实际空间 |
+| .symtab   | 符号表                                       |
+| .rel.text | .text节中位置的列表.多个目标文件整合时需要修正 |
+| .rel.data |                                                |
+| .debug    |                                                |
+| .line     | 原始C源程序中行号和.text节中机器指令间的映射   |
+| .strtab   | 字符串表                                           |
+** Symbols and Symbol Tables
+符号与符号表:每个可重定位目标模块m都有一个符号表,它包含m所定义和引用的符号的信息.在链接器的上下文中有三种符号:
+1) 由m定义并可被其他模块引用的全局符号.  如非静态的C函数, 不static的全局变量.
+2) 由其他模块定义并被模块m引用的全局符号.  即(external)
+3) 只被模块m定义和引用的本地符号. 带static的全局变量和函数.
+注意,局部非静态变量不在符号表内,那些符号在运行时在栈中被管理. 但是局部静态变量不同.
+** Symbol Resolution
+链接器解析符号引用的方式是将每个引用与它输入的可重定位目标文件的符号表中的一个确定的符号定义关联.
+*静态库链接* 
+** Relocation
+当完成符号解析,代码中每个符号引用和确定的符号定义就关联起来了,链接器就知道了它的输入目标模块的代码节和数据节的确切大小 . 因此可以合并输入模块,并为每个符号分配运行时地址.
+1. 重定位节 和 符号定义. 把所有类型相同的节 合并为统一类型的新的聚合节(如.data节), 然后链接器把运行时存储器地址赋予聚合节,节及每个符号.  -- 由此,程序中每个指令和全局变量都有一个唯一的运行时存储器地址了.
+2. 重定位节中的符号引用.  链接器修改代码节和数据节中对每个符号的引用,使得他们指向正确的运行时地址.
+
+** Executable Object Files                   可执行目标文件
+[[file:imgs/ELF-exe.png]]
+** Loading Executable Object Files
+loading :    加载器将可执行目标文件中的代码和数据从磁盘拷贝到存储器中,然后调转到程序的第一条指令或入口点(entry point)来运行该程序.  
+注意_start地址, .init节.
+任何unix程序都可以通过调用execve函数来调用加载器
+** Dynamic Linking with Shared Libraries
+动态链接器. (dynamic linker) 
+| .so | unix    |
+| DLL | windows |
+** Loading and Linking Shared Libraries from Applications
+从应用程序中加载和链接共享库.
+关于热更新的延展思考.
+软件开发者利用共享库发布软件更新
+web服务器生成动态内容
+Java native interface ,JNI 允许Java程序调用本地C和C++函数. 其思路是将本地C函数编译到共享库中,使用dlopen接口动态加载和执行共享库中的函数.
+** Position-independent Code (PIC)
+** Tools for Manipulating Object Files
+** Summary
+#+imgs/ELF.png http://phantomjia.files.wordpress.com/2014/06/wpid-elf.png
+#+imgs/ELF-exe.png http://phantomjia.files.wordpress.com/2014/06/wpid-elf-exe.png
