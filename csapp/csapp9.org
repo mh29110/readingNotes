@@ -1,0 +1,61 @@
+#+DATE: [2014-06-17 Tue 15:18]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: Computer Systems A Programmer’s Perspective III (深入理解计算机系统 第九章 ）
+*** 虚拟存储器
+* Virtual Memory
+虚拟存储器 VM , 是硬件异常,硬件地址翻译,主存,磁盘文件和内核软件的完美交互,它为每个进程提供了一个大的,一致和私有的地址空间. 它有三大功能:
+1. 它将主存看成是一个存储在磁盘上的地址空间的高速缓存,在主存中只保存活动区域,并根据需要在磁盘和主存之间传送数据,是主存使用更高效;
+2. 它为每个进程都提供了一致的地址空间,从而简化了存储器管理;
+3. 它保护了每个进程的地址空间不被其他进程破坏.
+虚拟存储器给予程序强大的能力,可以创建和销毁存储器片(chunk),将存储器片映射到磁盘文件的某个部分,以及与其他进程共享存储器, 例如可以加载一个文件的内容到存储器,而不需要任何显式的拷贝.
+
+** Physical and Virtual Addressing
+物理与虚拟寻址.
+虚拟寻址: CPU生成一个虚拟地址(virtual address)来访问主存,这个虚拟地址在被送到存储器之间被转换为适当的物理地址,(地址翻译 = CPU硬件+操作系统 ).CPU芯片上叫做存储器管理单元(Memory Management Unit,MMU)的专用硬件,利用存放在主存中的查询表来动态翻译虚拟地址,该表的内容由操作系统管理.
+** Address Spaces
+主存中每个字节都有一个选自虚拟地址空间的虚拟地址 , 和一个选自物理地址空间的物理地址.
+** VM as a tool for caching
+*** VM
+系统将虚拟存储器分割为虚拟页 (Virtual Page, VP) . 
+类似的,物理存储器也被分割为物理页 (Physical Page, PP)  . 物理页大小等同于虚拟页大小.
+虚拟页面在任意时刻分为三个子集: 未分配,缓存的,未缓存的.
+     注意: 未缓存的.理解.
+*** 页命中
+*** 缺页.
+*** 分配页面
+*** 原理->局部性.
+** VM as a tool for memory management
+用VM管理存储器的优点
+- 简化链接 . VM使进程拥有独立的地址空间,允许每个进程的存储器映像使用相同的基本格式.而不管代码和数据实际存放在物理存储器何处.
+- 简化加载 . 存储器还使得容易向存储器中加载可执行文件和共享对象文件．
+- 简化共享 . 如内核代码, C标准库
+- 简化存储器分配 . 如连续的k个虚拟页 不需要是 连续的物理页.可以是任意位置的k个物理页.
+
+*** case
+在ELF可执行文件中.text和.data等文件是连续的,要把这些节加载到一个新创建的进程中,linux加载器分配虚拟页的一个连续的片(chunk),从0x400000(64位而言)处开始,把这些虚拟页标记为无效未被缓存的.将页表条目指向目标文件中适当的位置.
+操作系统为系统中的每个进程都维护一个独立的页表,仅仅修改页表条目(PTE= valid bit + n位地址段)就可以做到以上的加载.
+
+*notice* 以上过程加载器从不实际拷贝任何数据从磁盘到存储器,而是在每个页被初次引用时,(要么从CPU取指令时引用,要么一条正在执行的指令引用一个存储器位置时引用),虚拟存储器系统会按需自动调入数据页.
+** VM as a tool for memory protection
+** Address Translation
+地址翻译....很长的但是没必要的一节.
+** case 
+** Memory Mapping
+*** 共享对象
+*** fork函数
+*** execve函数
+*** mmap函数
+** Dynamic Memory Alloction
+堆 heap
+实验:实现一个简单的分配器..
+** Garbage Collection
+*** 垃圾收集器 的基本知识
+java与as3等
+** Common Memory -Related Bugs in C Programs
+常见的C程序中与存储器有关的错误 .
+指针错误等.
+** Summary
+
