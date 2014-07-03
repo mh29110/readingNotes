@@ -1,3 +1,5 @@
+#+BLOG: phantomjia
+#+POSTID: 134
 #+DATE: [2014-06-17 Tue 15:18]
 #+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
 #+CATEGORY: org2blog, emacs

@@ -1,0 +1,44 @@
+#+BLOG: phantomjia
+#+POSTID: 139
+#+DATE: [2014-07-03 Thu 10:03]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: Swf bottom implementation
+
+* Traditional Flash Player Elastic Racetrack
+
+** FP 不会因为要更新屏幕而中途打断代码的执行.
+[[file:d:/myblog/readingNotes/flash/imgs/runway.png]]
+
+** AVM2 Marshal
+
+*** Marshal
+Marshal 负责提供时间片(一秒钟执行的次数).  它与帧率不是同一种东西.  一帧可以包含多个时间片.
+有些事件只在某些时间片中可用,比如Event.ENTER_FRAME事件只会在一帧的第一个时间片中被分发.
+每个时间片分5个步骤执行:
+1. FlashPlayer事件分发 -- 包括timer定时器,鼠标事件,Enter_frame ,URLLoader等分发的事件...
+2. 用户代码的执行 --监听第一步分发的事件的代码在这个阶段执行.
+3. 渲染事件调度  -- 当stage.invalidate()执行时,这个特殊的事件被调度.
+4. 最后用户代码被执行 -- 监听第3步的代码在这个时候被执行.
+5. FlashPlayer重新渲染改变显示列表.
+[[file:d:/myblog/readingNotes/flash/imgs/02.png]]
+
+*** Elastic Racetrack
+在同一个时间片内,产生两个主要跑道: 代码处理 和 渲染.
+
+** Flash Player =  图像处理 +  ActionScript字节码处理.
+
+*** 图像元素
+播放器会将图像元素构造到一个递减的目录树中。从基本的节点开始，有许多的以帧的内容和次级节点构成的分支。播放器每一个循环树目录上任何的元素都会被处理。当前的Flash 7播放器中，帧的内容按照需要从level0最高级开始依照从小到大的顺序被扫描和处理。根据图解表现关键是使树的层级和元素的内在需要相同的简单分明。树的菜单越少，层级越浅图像元素将会被更快速的显现到屏幕上。
+
+*** 字节码处理
+树的结构同样也适用于对ActionScript 字节码的处理当中。在AS阶段，树的现状被将以字节代码形式被扫描出来。每一个指定的事件将被逐级执行处理。ActionScript是基于栈的以栈为基础的，这样任何的字节代码被集中到堆栈上并被依照树的结构被线性处理。根据给出的帧上的代码和事件的容量，跑道上的AS部分将会被扩展。尽管没有一种固定的方法延迟代码的执行，播放器将会在每一个帧的循环中处理完被请求处理的任何内容。有趣的是，我们注意到那些使用功能和事件的代码能被排列成一个成的序列，等待着处理。在某种意义上，播放器从不会消损的，他会一直的做您所需要的任何工作，不会顺从于一个帧的循环。关键是不要在给出的帧上需要播放器处理太多的内容，并能对最新的帧依照逻辑和事件去处理。
+
+*  Swf execute : Underlying messaging to Events loop.
+
+** [[file:d:/myblog/readingNotes/flash/imgs/underlyingMessage.png]]
+#+d:/myblog/readingNotes/flash/imgs/runway.png http://phantomjia.files.wordpress.com/2014/07/wpid-runway.png
+#+d:/myblog/readingNotes/flash/imgs/02.png http://phantomjia.files.wordpress.com/2014/07/wpid-02.png
+#+d:/myblog/readingNotes/flash/imgs/underlyingMessage.png http://phantomjia.files.wordpress.com/2014/07/wpid-underlyingmessage.png
