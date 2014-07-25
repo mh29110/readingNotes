@@ -1,0 +1,100 @@
+#+BLOG: phantomjia
+#+POSTID: 147
+#+DATE: [2014-07-25 Fri 09:37]
+#+OPTIONS: toc:nil num:t todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs, avm2
+#+TAGS:avm2
+#+DESCRIPTION:
+#+TITLE: AS3 prototype 
+*  AVM2 source code reading notes
+** so that's a picture from [[http://help.adobe.com/zh_cn/actionscript/3.0_programmingas3/ws5b3ccc516d4fbf351e63e3d118a9b90204-7f3f.html#][adobe.com]] . 
+ 图中的每个矩形表示一个对象。图中的每一个对象都有下标字符 A，这表示该对象属于类 A。类对象 (CA) 包含对许多其它重要对象的引用。实例 traits 对象 (TA) 用于存储在类定义中定义的实例属性。类 traits 对象 (TCA) 表示类的内部类型，用于存储该类定义的静态属性（下标字符 C 代表“类”）。原型对象 (PA) 始终指的是最初通过 constructor 属性附加到的类对象。
+[[file:pics/class.png]]
+
+1. 目前AS3机制中,所有类的原型都是Object.prototype的delegate.  因为prototype是只读的了,而且只有dynamic修饰的类才可以动态改变原型对象的属性.
+2. 类机制的属性和方法由trait对象管理.
+
+
+*** traits 对象
+traits 对象是 ActionScript 3.0 中的新增对象，它是为了提高性能而实现的。在以前版本的 ActionScript 中，名称查找是一个耗时的过程，因为 Flash Player 要搜索原型链。在 ActionScript 3.0 中，名称查找更有效、耗时更少，因为可以将继承属性从超类复制到子类的 traits 对象。
+
+编程代码不能直接访问 traits 对象，但是性能和内存使用情况的改善可反映它的存在。traits 对象给 AVM2 提供了关于类的布局和内容的详细信息。借助这些信息，AVM2 可显著减少执行时间，因为它可以经常生成直接机器指令来直接访问属性或直接调用方法，而省去了查找名称所耗费的时间。
+
+由于使用了 traits 对象，与以前版本中 ActionScript 类似对象相比，该版本中对象占用内存的时间明显减少。例如，如果某个类已密封（即，该类未声明为 dynamic），则该类实例不需要动态添加属性的哈希表，只保留一个到 traits 对象的指针和该类中定义的固定属性的某些位置。因此，如果对象在 ActionScript 2.0 中需要占用 100 个字节的内存，在 ActionScript 3.0 中只需要占用 20 个字节的内存。
+
+*** delegate  design pattern 
+** 原型对象
+***  history
+*** AS3 ...readonly
+每个 ActionScript 类对象都有一个名为 prototype 属性，它表示对类的原型对象的引用。ActionScript 根本上是基于原型的语言，原型对象是旧内容。有关详细信息，请参阅 ActionScript OOP 支持的历史。
+
+prototype 属性是只读属性，这表示不能将其修改为指向其它对象。这不同于以前版本 ActionScript 中的类 prototype 属性，在以前版本中可以重新分配 prototype，使它指向其它类。虽然 prototype 属性是只读属性，但是它所引用的原型对象不是只读的。换句话说，可以向原型对象添加新属性。向原型对象添加的属性可在类的所有实例中共享。
+不能再在AS3中自己创建原型链, 现在prototype是只读,只能是object.
+*** AS# ...Traits
+原型链是以前版本的 ActionScript 的唯一继承机制，在 ActionScript 3.0 中，原型链只具有辅助作用。主要的继承机制（固定属性）是由 traits 对象在内部处理的。固定属性指的是定义为类定义的一部分的变量或方法。固定属性继承也叫做类继承，因为它是与 class、extends 和 override 等关键字相关的继承机制。
+
+原型链提供了另一种继承机制，该机制的动态性比固定属性继承的更强。既可以将属性作为类定义的一部分，也可以在运行时通过类对象的 prototype 属性向类的原型对象中添加属性。但是，请注意，如果将编译器设置为严格模式，则不能访问添加到原型对象中的属性，除非使用 dynamic 关键字声明类。
+*** samples
+Object 类就是这样类的示例，它的原型对象附加了若干属性。Object 类的 toString() 和 valueOf() 方法实际上是一些函数，它们分配给 Object 类原型对象的属性。以下是一个示例，说明这些方法的声明理论上是怎样的（实际实现时会因实现详细信息而稍有不同）：
+#+BEGIN_SRC 
+public dynamic class Object 
+{ 
+    prototype.toString = function() 
+    { 
+        // statements 
+    }; 
+    prototype.valueOf = function() 
+    { 
+        // statements 
+    }; 
+}
+
+#+END_SRC
+如前所述，可以将属性附加到类定义外部的类原型对象。例如，也可以在 Object 类定义外部定义 toString() 方法，如下所示：
+#+BEGIN_SRC 
+Object.prototype.toString = function() 
+{ 
+    // statements 
+};
+#+END_SRC
+但是，原型继承与固定属性继承不一样，如果要重新定义子类中的方法，原型继承不需要 override 关键字。例如. 如果要重新定义 Object 类的子类中的 valueOf() 方法，您有以下三种选择。第一，可以在类定义中的子类原型对象上定义 valueOf() 方法。以下代码创建一个名为 Foo 的 Object 子类，并将 Foo 原型对象的 valueOf() 方法重新定义为类定义的一部分。因为每个类都是从 Object 继承的，所以不需要使用 extends 关键字。
+
+#+BEGIN_SRC 
+dynamic class Foo 
+{ 
+    prototype.valueOf = function() 
+    { 
+        return "Instance of Foo"; 
+    }; 
+}
+#+END_SRC
+第二，可以在类定义外部对 Foo 原型对象定义 valueOf() 方法，如以下代码中所示：
+
+#+BEGIN_SRC 
+Foo.prototype.valueOf = function() 
+{ 
+    return "Instance of Foo"; 
+};
+#+END_SRC
+第三，可以将名为 valueOf() 的固定属性定义为 Foo 类的一部分。这种方法与其它混合了固定属性继承与原型继承的方法有所不同。要重新定义 valueOf() 的 Foo 的任何子类必须使用 override 关键字。以下代码显示 valueOf() 定义为 Foo 中的固定属性：
+
+#+BEGIN_SRC 
+class Foo 
+{ 
+    function valueOf():String 
+    { 
+        return "Instance of Foo"; 
+    } 
+}
+#+END_SRC
+
+
+
+
+
+
+
+
+
+
+#+pics/class.png http://phantomjia.files.wordpress.com/2014/07/wpid-class1.png
