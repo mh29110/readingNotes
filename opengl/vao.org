@@ -2,7 +2,7 @@
 #+POSTID: 158
 #+DATE: [2014-07-31 Thu 10:46]
 #+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
-#+CATEGORY: org2blog, emacs
+#+CATEGORY:opengl
 #+TAGS:
 #+DESCRIPTION:
 #+TITLE:  顶点数组对象 VAO(Vertex Array Object)  (转)

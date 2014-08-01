@@ -2,7 +2,7 @@
 #+POSTID: 156
 #+DATE: [2014-07-30 Wed 13:11]
 #+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
-#+CATEGORY: org2blog, emacs
+#+CATEGORY: opengl 
 #+TAGS:
 #+DESCRIPTION:
 #+TITLE: OpenGl (1)  Environment setup

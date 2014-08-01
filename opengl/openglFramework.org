@@ -1,0 +1,92 @@
+#+BLOG: phantomjia
+#+POSTID: 163
+#+DATE: [2014-08-01 Fri 13:11]
+#+OPTIONS: toc:t num:t todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: OpenGl (2) framework
+
+* framework 
+程序绘图框架
+
+**  init OpenGL .
+OpenGl初始化,包括OpenGL状态,特性设置等.
+*** 
+**** color setting : 
+: glClearColor , glShadeModel
+**** texture setting :
+: glEnable , glGenTextures ...
+**** depth test
+: glClearDepthf , glDepthFunc , glEnable ...
+**** blend setting :
+: glBlendFunc , glEnable ...
+**** light setting : 
+: glLightfv, glEnable ..
+
+** metadata of basic
+几何基本图元数据准备,如模型定点,颜色以及纹理等数据.
+
+** view model
+设置观察坐标系下的取景模式和取景框大小
+: glViewport  //屏幕窗口大小
+: glOrtho , gluPerspective , glFrustumf //投影方式
+
+** preparation
+绘图前的准备工作
+: glClear //清除当前窗口的内容
+: glMatrixMode , glLoadIdentity //重置视图模型矩阵.
+
+** math for building
+构造几何物体对象的数学描述,包括点线面的位置和拓扑关系,几何变换,光照处理,旋转,移动图元等.
+: glRotate , glTranslatef .
+
+** draw scene 
+绘图显示场景.
+
+* matrix stack  :: 矩阵堆栈
+
+** introduction
+在计算机图形学中，所有的变换都是通过矩阵相乘实现的，即物体定点构成的齐次坐标矩阵乘以三维变换矩阵就可得到变换后的物体齐次坐标矩阵。同样，在OpenGL中图远的坐标变换（移动、旋转、缩放）也是通过矩阵乘法实现的。
+
+OpenGL中比较重要的矩阵有投影矩阵和模型视图矩阵，外加纹理矩阵。矩阵堆栈基于矩阵引入，它可以以栈的形式保存相应的矩阵，压入和弹出操作同普通的栈，
+三种矩阵对应了三个矩阵堆栈。
+
+实际上在创建、装入、相乘模型视图变换和投影变换矩阵时都已经用到了矩阵堆栈。拿模型视图变换来说，在绘制复杂的场景时，会涉及到复杂的模型矩阵变换，常常我们需要保存这些变换的中间状态，以便在进行一些变换后快速恢复，而无需对当前模型矩阵进行反变换以进行恢复（费时）。比如，当前模型视图矩阵状态为矩阵A，场景绘制需要模型视图矩阵从A->B，然后从A->C......。利用矩阵堆栈，程序只需要保存矩阵A（glPushMatrix），执行完A->B后，恢复模式视图矩阵为A（glPopMatrix），执行变换A->C。很显然，使用矩阵堆栈比仅使用单个矩阵效率高很多。
+
+函数glPushMatrix用于将当前矩阵压入矩阵堆栈（由函数glMatrixMode指定堆栈类型），即：该函数复制栈顶矩阵（比如矩阵A），并放置在栈顶（A‘），这样矩阵堆栈顶部有两个相同的矩阵，栈顶矩阵作为当前矩阵进行后续变换。函数glPushMatrix弹出栈顶矩阵（A‘），下面一个元素变为栈顶（A），即恢复之前的模型视图状态。切记：当前矩阵永远位于堆栈顶部。矩阵堆栈是有深度的，如果压入过多矩阵或者堆栈只有一个矩阵而调用glPopMatrix将导致错误。
+
+code::
+#+BEGIN_SRC 
+glMatrixMode(GL_MODEVIEW); // set cur matrix mode
+glPushMatrix(); // push cur matrix
+    glTranslatef(*);
+    glRotatef(*);
+    glScalef(*);
+    drawObject();
+glPopMatrix();
+#+END_SRC
+
+* geometric figure
+
+** 基本图元
+OpenGL中几何图元包括点、直线以及多边形，其中多边形特指简单凸多边形。它们都是用顶点集合来描述的，要指定定点可以使用函数glVertex*()。
+绘制几何图元时，需要在glBegin和glEnd的之间指定定点数据和图元类型。图元类型主要有：
+          点：GL_POINTS
+          直线：GL_LINES\GL_LINE_STRIP\GL_LINE_LOOP
+          三角形：GL_TRIANGLES\GL_TRIANGLE_STRIP\GL_TRIANGLE_FAN
+          四边形：GL_QUADS\GL_QUAD_STRIP
+         多边形：GL_POLYGON
+特别说明下三角形、四边形的几种绘图方式：
+        GL_TRIANGLES：按顶点顺序每三个点绘制一个三角形
+
+GL_TRIANGLE_STRIP：按顶点顺序绘制一个三角形带，依次使用n、n+1、n+2（n>0）绘制每一个三角形,这里要求按一定顺序绘制，以保证三角形的方向相同，从而确保三角形带可组成表面的一部分。这个要求十分关键，否则画出来的图形与期望的有很大差别。
+
+GL_TRIANGLE_FAN：按顶点顺序绘制一个三角形扇，绘制三角形时使用1、n+1、n+2三个顶点，其它与GL_TRIANGLE_STRIP相同。
+GL_QUAD_STRIP：按顶点顺序绘制四边形带，绘制四边形时使用n、n+1、n+3、n+2（n>0）顶点，其他与GL_TRIANGLE_STRIP相同。
+
+** 顶点数组
+OpenGL提供了定点数组函数，让开发者只需使用几个数组即可指定大量与定点相关的数据，并且只需要使用几个函数便能存取这些数据。使用顶点数组来存取数据可提高应用程序的性能。使用顶点数组来渲染几何体包括三个步骤：
+   （1）enable顶点数组：用于存储顶点坐标、面法线、RGBA颜色、辅助颜色、颜色索引、雾坐标、纹理坐标以及多边形边界边标记。主要函数：glEnableClientState/glDisableClientState。
+   （2）顶点数据存入顶点数组：对数组的存取是根据它们在内存单元地址（即指向内存单元的指针）进行的。在客户端/服务器模式下，数据存储在客户的地址空间中。主要函数：glVertexPointer/glColorPointer/glNormalPointer/glTexCoordPointer等。
+   （3）使用数据绘制几何体：OpenGL通过对指针解除引用来获得被启用的数组中的数据。在客户端/服务器模式下，数据被传递到服务器的地址空间中。主要函数：glDrawArrays（绘制一系列相邻的数组顶点元素）/glDrawElements（绘制由顶点索引数组决定的数组顶点数据），这两个函数详解见:http://blog.csdn.net/ocean2006/article/details/6892608
