@@ -1,0 +1,106 @@
+#+BLOG: phantomjia
+#+POSTID: 156
+#+DATE: [2014-07-30 Wed 13:11]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: OpenGl (1)  Environment setup
+* started
+** introduction
+参考官方的这个教程学习openGL , 笔记.
+我选择的是win7 +　vs2012 环境.其中用到了glew , glfw , glm 等库.
+辛酸的路程开始了...
+** configuration
+vc++ 添加类库 参考视频:  [[https://www.youtube.com/watch?v%3DYfhpVVq1Gx8&list%3DWL&index%3D10][setting up openGl on visual studio]]
+*** glew 
+[[http://www.cnblogs.com/madfrog/archive/2010/06/25/1765259.html][glew 库]]
+GLEW是一个跨平台的C++扩展库，基于OpenGL图形接口。使用OpenGL的朋友都知道，window目前只支持OpenGL1.1的涵数，但 OpenGL现在都发展到2.0以上了，要使用这些OpenGL的高级特性，就必须下载最新的扩展，另外，不同的显卡公司，也会发布一些只有自家显卡才支 持的扩展函数，你要想用这数涵数，不得不去寻找最新的glext.h,有了GLEW扩展库，你就再也不用为找不到函数的接口而烦恼，因为GLEW能自动识 别你的平台所支持的全部OpenGL高级扩展涵数。也就是说，只要包含一个glew.h头文件，你就能使用gl,glu,glext,wgl,glx的全 部函数。GLEW支持目前流行的各种操作系统（including Windows, Linux, Mac OS X, FreeBSD, Irix, and Solaris）.
+*** glut 
+glut是实用工具库，基本上是用于做窗口界面的，并且是跨平台（所以有时你喜欢做简单的demo的话，可以光用glut就ok了）.
+*** glfw 
+最坑的就是这个库. 
+1. 它分为win32版本和win64版本,虽然我是64位版本(绝对确认),但是必须要使用win32版本才可以. 32位的dll文件也要放置在SysWOW64下才能运行正常.安装过程中,虽然配置好类库的引用,但是还是无法链接外部符号,很有可能是用成了64位的类库.
+2. 出现了0xc000007b这个错误,我使用了如下的修复工具来修复.平时玩游戏遇到这个错误也可以使用这个工具修复.  [[http://blog.csdn.net/vbcom/article/details/7245186][DirectX repair enhance]]
+*** glm
+下载glm .云盘上有,没有找到lib版本,我们参考这个视频,添加整个目录进项目.
+[[https://www.youtube.com/watch?v%3DMqef_Q9HySk][glm include]]
+preference ->c/c++ -> general -> additional include directories :  D:\leegame\vsws\openGL\glm
+done !
+** my way for tutorail
+我并没有自己make官方的tutorial.而是自己参考并写示例代码,这样对学习应该更有帮助.
+* chapter one  :create a window.
+source code : 
+#+BEGIN_SRC 
+// Include standard headers
+#pragma comment(lib,"opengl32.lib")
+
+#pragma comment(lib,"glfw3dll.lib")
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Include GLEW
+#include <GL/glew.h>  // 跨平台的C++扩展库,基于OpenGL图形接口
+
+// Include GLFW
+#include <glfw3.h>   //GLFW is an Open Source,multi-platform library for creating windows with OpenGL contexts and receiving input and events.
+GLFWwindow* window;
+
+// Include GLM
+#include <glm/glm.hpp>
+using namespace glm;
+
+int main( void )
+{
+	// Initialise GLFW
+	if( !glfwInit() )
+	{
+		fprintf( stderr, "Failed to initialize GLFW\n" );
+		return -1;
+	}
+
+	glfwWindowHint(GLFW_SAMPLES, 4);//4x anti aliasing
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);// we want OpenGL 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);   
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //we dont want the old OpenGL.
+
+	// Open a window and create its OpenGL context
+	window = glfwCreateWindow( 1024, 768, "Tutorial 01", NULL, NULL);
+	if( window == NULL ){
+		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are no
+t 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	// Initialize GLEW
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Failed to initialize GLEW\n");
+		return -1;
+	}
+
+	// Ensure we can capture the escape key being pressed below
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
+	// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	do{
+		// Draw nothing, see you in tutorial 2 !
+
+		// Swap buffers
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+	} // Check if the ESC key was pressed or the window was closed
+	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+		   glfwWindowShouldClose(window) == 0 );
+
+	// Close OpenGL window and terminate GLFW
+	glfwTerminate();
+
+	return 0;
+}
+#+END_SRC
