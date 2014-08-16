@@ -1,0 +1,90 @@
+#+BLOG: phantomjia
+#+POSTID: 234
+#+DATE: [2014-08-16 Sat 20:22]
+#+OPTIONS: toc:nil num:t todo:nil pri:nil tags:nil ^:t TeX:nil
+#+CATEGORY: notes
+#+TAGS:linearAlgebra
+#+DESCRIPTION:
+#+TITLE: MIT Linear Algebra Notes<1>
+
+我的MIT的线性代数的几何表示课堂笔记. 
+实际应用学习中越来越多的涉及到了线性代数和解析几何,也让我有机会重新认识和领略数学之美. 涉及到OpenGl和游戏3D引擎编写也需要这些知识.
+
+印象笔记不支持数学公式,这让我复习笔记的时候觉得非常的不爽.所以我决定用emacs重写一遍.
+
+* Lecture one  
+ 线性代数的核心概念...怎么用行和列进行矩阵操作.以向量的思维操作.
+** Matrix and Vector
+	* 矩阵M乘以向量x , 是矩阵的列向量的线性组合.
+      Mx = b  .     columns vectors ->     b = columns of M * x.
+	* 向量乘以矩阵,  是矩阵的行向量的线性组合.
+*** 个人理解:
+- 矩阵乘以向量 =>   原来的坐标在新坐标系中的表示.(使用新坐标系观察)(以列向量理解)
+- 向量乘以矩阵 => 原来的坐标经过矩阵转换后的坐标.(坐标系不变)  (以行向量理解,如3D数学 笔记中讲述)
+*** 线性无关性
+ 非奇异矩阵  因为Mx = b ,如果M是奇异矩阵,则x不一定有解.例如三维时,三个列向量在一个平面上,b就不能覆盖整个三维空间. 
+fixed function pipeline 固定功能管道
+*** 列变换时矩阵右承,而行变换则是左承.
+	* 对于矩阵M ,如果是M*A ,则是用A对M进行列向量分析.  如果是A*M ,则是A对M进行行向量分析.
+
+	* 置换矩阵Permutation  :  放在不同侧,效果不同.
+
+* Lecture two ->four   Elimination 
+** 矩阵消元法
+from   A =b  to Ux=c     | U ..upper  triangular matrix  .上三角矩阵
+- 通过矩阵消元法解方程组,从矩阵A得到矩阵U的这个消元过程就是解方程组的过程.是数学界最常见的运算之一.
+  方程组右边的值可以带入左边的矩阵,扩展为|增广矩阵|.
+- EA = U .  E就是矩阵消元过程中累积的矩阵变换.  (此处结合高斯-若尔当消元来理解)
+** Inverse Matrix
+*** definition
+ 逆矩阵（英语：inverse matrix）：在线性代数中，给定一个 n 阶方阵A，若存在一 n 阶方阵B，使得AB = BA = I_n ，其中I_n 为n 阶单位矩阵，则称A是可逆的，且B是A的逆矩阵，记作A^-1 。
+
+只有正方形（n×n）的矩阵，亦即方阵，才可能、但非必然有逆矩阵。若方阵A的逆矩阵存在，则称A为非奇异方阵或可逆方阵。
+与行列式类似，逆矩阵一般常用于求解包含数个变量的数学方程式。
+
+与行列式类似，逆矩阵一般常用于求解包含数个变量的数学方程式。
+	*   若方矩阵没有逆  =>    矩阵中所有列向量的线性组合都是平行的. 无法构成一个单位矩阵I . 
+	*   行列式为零没有逆矩阵.
+
+	* If you can find a non-zero Vector x  with Ax = 0.  then  A isn't invertible.
+    Ax = 0  ->    A*A^-1 * x = 0*A^-1   ->  x = 0*A^-1   ->   x = 0.  | but A!=0.  
+
+	*  A*B  的逆矩阵等于( B^-1 * A^-1 )    |  AB相乘后的矩阵的逆矩阵 等于 B的逆矩阵乘以A的逆矩阵 . 注意是逆序.  (lecture4中用到)
+	* A * (column j of A^-1)   =  column j of I .    利用矩阵乘法的列向量分析法.
+*** 初等变换
+  如果矩阵A和B互逆，则AB=BA=I.由条件AB=BA以及矩阵乘法的定义可知，矩阵A和B都是方阵。再由条件AB=I以及定理“两个矩阵的乘积的行列式等于这两个矩阵的行列式的乘积”可知，这两个矩阵的行列式都不为0。也就是说，这两个矩阵的秩等于它们的级数（或称为阶，也就是说，A与B都是方阵，且rank(A) = rank(B) = n）。换句话说，这两个矩阵可以只经由初等行变换，或者只经由初等列变换，变为单位矩阵。
+
+  因为对矩阵A施以初等行变换（初等列变换）就相当于在A的左边（右边）乘以相应的初等矩阵，所以我们可以同时对A和I施以相同的初等行变换（初等列变换）。这样，当矩阵A被变为I时，I就被变为A的逆阵B。
+**** 课程中例子如下图
+[[file:imgs/inverse1.png]]
+[[file:imgs/inverse2.png]]
+** Matrix Multiply
+                   A*B=  C
+	1. ** 点分析法         Cij = Ai1*B1j  +  Ai2*B2J  + ... +  Ain*Bnj.
+	2. ** 列向量分析:　  Ｃ中的每一列都是由Ａ中的所有列向量的线性组合．具体组合关系由Ｂ中的列向量表示．
+                   矩阵A乘以矩阵B ,可以看成A矩阵分别乘以B矩阵的每一个列向量. 也就是针对B矩阵的每个列向量进行A矩阵全部列向量的线性组合.
+
+     3.**行向量分析:       C中的每一行都是B中所有行向量的线性组合.  C中的行向量对应A中的行向量.
+
+     4.****   A的列向量* B的行向量.   形成一个矩阵. (倍数).
+                    A*B 是A的列向量*B的行向量 的总和 .      |  AB= Sum[    (columns of A )* (cows of B)  ]. | 矩阵加法.
+
+     5..*********分块乘法.
+    
+** Transpose Matrix             转置矩阵          
+	*   (A^T)^T = A                       转置是自身逆运算。
+	*   (A+B)^T = A^T + B^T .              转置是从m × n矩阵的向量空间到所有n × m矩阵的向量空间的线性映射。
+	*   (AB)^T = B^T A^T .                注意因子反转的次序。以此可推出方块矩阵A是可逆矩阵，当且仅当AT是可逆矩阵.在这种情况下有 (A−1)T = (AT)−1。 
+        相对容易的把这个结果扩展到矩阵相乘的一般情况，可得出 (ABC...XYZ)T = ZTYTXT...CTBTAT。
+        (A^T)^-1 = (A^-1)^T             A的 转置的逆矩阵   等于     A的逆矩阵的转置.  :important:
+
+
+* Lecture five  
+
+
+
+
+
+ t_2 f=\sum_{i=1}^{100}n^2  |for test  
+#+imgs/inverse1.png http://phantomjia.files.wordpress.com/2014/08/wpid-inverse1.png
+#+imgs/inverse2.png http://phantomjia.files.wordpress.com/2014/08/wpid-inverse2.png
