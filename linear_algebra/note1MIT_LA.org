@@ -30,8 +30,8 @@ fixed function pipeline 固定功能管道
 	* 置换矩阵Permutation  :  放在不同侧,效果不同.
 
 * Lecture two ->four   Elimination 
-** 矩阵消元法
-from   A =b  to Ux=c     | U ..upper  triangular matrix  .上三角矩阵
+** 矩阵消元法   (No row exchange) 
+from   A =b  to Ux=c     | U ..upper  triangular matrix  .上三角矩阵    
 - 通过矩阵消元法解方程组,从矩阵A得到矩阵U的这个消元过程就是解方程组的过程.是数学界最常见的运算之一.
   方程组右边的值可以带入左边的矩阵,扩展为|增广矩阵|.
 - EA = U .  E就是矩阵消元过程中累积的矩阵变换.  (此处结合高斯-若尔当消元来理解)
@@ -72,19 +72,91 @@ from   A =b  to Ux=c     | U ..upper  triangular matrix  .上三角矩阵
      5..*********分块乘法.
     
 ** Transpose Matrix             转置矩阵          
-	*   (A^T)^T = A                       转置是自身逆运算。
-	*   (A+B)^T = A^T + B^T .              转置是从m × n矩阵的向量空间到所有n × m矩阵的向量空间的线性映射。
-	*   (AB)^T = B^T A^T .                注意因子反转的次序。以此可推出方块矩阵A是可逆矩阵，当且仅当AT是可逆矩阵.在这种情况下有 (A−1)T = (AT)−1。 
-        相对容易的把这个结果扩展到矩阵相乘的一般情况，可得出 (ABC...XYZ)T = ZTYTXT...CTBTAT。
-        (A^T)^-1 = (A^-1)^T             A的 转置的逆矩阵   等于     A的逆矩阵的转置.  :important:
+                         Transpose  =>   (A)^T_ij = Aji  
+	* (A^T)^T = A                       转置是自身逆运算。
+	* (A+B)^T = A^T + B^T .              转置是从m × n矩阵的向量空间到所有n × m矩阵的向量空间的线性映射。
+	* (AB)^T = B^T A^T .                注意因子反转的次序。以此可推出方块矩阵A是可逆矩阵，当且仅当AT是可逆矩阵.在这种情况下有 (A−1)T = (AT)−1。 
+      相对容易的把这个结果扩展到矩阵相乘的一般情况，可得出 (ABC...XYZ)T = ZTYTXT...CTBTAT。
+      (A^T)^-1 = (A^-1)^T             A的 转置的逆矩阵   等于     A的逆矩阵的转置.  :important:
+*** 对称矩阵  A^T = A .
+*** R^T*R is always Symmetric . 矩阵的转置乘以矩阵总是得到一个对称性的矩阵.   
+    because of B^T A^T = (AB)^T ,then R^t*R = R^T * (R^T)^T = (R^T*R)^T , so  got it.
 
 
 * Lecture five  
+** Permutations P  : execute row exchanges       置换矩阵
+***  if no row exchanges ->   A = LU   |   L : lower triangular Matrix 下三角矩阵.   | U ..upper  triangular matrix  .上三角矩阵.
+***  PA = LU .     置换矩阵是行重新排列了的单元矩阵.   n阶单元方阵P的排列组合数目 = n!  .即n*(n-1) ...2*1.
+     性质如下: 
+     - P^-1 = P^T        : P的逆矩阵等于P的转置矩阵.
+     - P^T * P = I      :上式推广A^-1*A = I .
+  
+                                 **** _/Chapter three/_   :   Vector Space
+** Vector Space
+***  example  R^2
+    R^2 = all 2 dimensional real vectors .   所有的二维实数向量.
+*** R^n 是包含所有n维实数向量的向量空间.
+    所有空间内向量符合八大运算规则,并且运算得出的结果向量仍然都在这个空间内.
+*** 子空间 subSpace 
+    a vector space inside R^n  , is a subspace of R^n.
+    比如: 相对于R^2 ,它的子空间包括
+      1. all of R^2.
+      2. any line through the original point.  L
+      3. zero vector only .   Z
+** 使用矩阵来表示子空间
+   example R^3 :  The columns in A , all their linear combinations form a subspace . called  _/the column space/_ .  C(A)
+                 列向量空间 :  所有矩阵中的列向量的线性组合,构成了一个子空间.  本例中它组成了一个通过原点的平面. 
+   + 所有的子空间都必须包含零向量.
+   + 子空间是算法规则对列向量的封闭.
+   + if have subspace S and T ,the intersection(空间交集) is a subspace .
+** column space  
+** Ax = b (方程组)
+  方程组是否总有解?什么样的b能使得方程组有解?   
+      A ->matrix who has n rows , so column space of A is a subspace of R^n.
+  -  (linear algebra) the columns in A ,all their linear combinations form a subspace .called the column space .
+  -  (equition set)   Does Ax = b always have a solution for every b?   | 方程组是否总有解?
+  以上两条总结: 对于A矩阵的列向量来说,他们的线性组合能否填充整个n维空间?
+*** 何时有解?
+    I can solve Ax = b when b is a combination of the columns. (when b is in the column space of A).
+    只有b是各列的线性组合时,Ax = b 才有解. | 只有当b在A的列向量空间中时,Ax = b 才有解.
+*** 重点描述                                                                    :important:
+    *因为根据定义,这个列空间包含了所有A中列向量的线性组合,那么A*x应该还在这个列空间内.即这个列空间包含所有的Ax .列空间包含所有A乘以任意x得到的向量.也就是包含了所有有解的b*
+    *如果b是各列向量的线性组合,那么线性组合就可以求出x.*  *如果b不是各列的线性组合,那么就不存在对应的x*.
+    这就是列向量列空间重要的原因,因为它能告诉我们何时方程组有解.
+*** 线性无关性.
+    其中某个列向量对线性组合没有贡献,可以由其他列向量组合而成.
+*** notice
+         behind our abstract definition , we have a purpose . 抽象的定义背后,有实际目的.
+** Null space
+   for Ax = b ,when b = 0 .  check that solutions to Ax = 0  always give us a subspace .  
+   #+BEGIN_SRC 
+     if Av = 0 and Aw = 0 , then A(v+w) = 0;  | 本身就符合分配率.
+     if Av = 9 then A(12v) = 0  -> 12(Av) = 0 | 基本定律
+   #+END_SRC
+   子空间对加法,数乘封闭.
+*** definition 
+   在数学中，一个算子 A 的零空间是方程 Av = 0 的所有解 v 的集合。它也叫做 A 的核, 核空间。用集合建造符号表示为
+   Null(A) = {v \in V : Av = 0}.
+   尽管术语核更加常用，术语零空间有时用在避免混淆于积分变换的情境中。应当避免把零空间混淆于/*零向量空间*/,它是只有零向量的空间。
+
+   如果算子是在向量空间上的线性算子，零空间就是线性子空间。因此零空间是向量空间。
 
 
 
 
 
+
+
+*** interpret  subject
+  behind our abstract definition , we have a purpose . 抽象的定义背后,有实际目的.
+  x component  =>  x分量. 
+   
  t_2 f=\sum_{i=1}^{100}n^2  |for test  
+ v \in V   |  { \ in }
+ \sum      |   {\ sum }
+
+
+
+
 #+imgs/inverse1.png http://phantomjia.files.wordpress.com/2014/08/wpid-inverse1.png
 #+imgs/inverse2.png http://phantomjia.files.wordpress.com/2014/08/wpid-inverse2.png
