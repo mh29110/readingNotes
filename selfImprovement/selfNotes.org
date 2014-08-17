@@ -1,0 +1,203 @@
+#+BLOG: phantomjia
+#+POSTID: 142
+#+DATE: [2014-07-19 Sat 17:34]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog, emacs
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: 程序员的自我修养 
+
+* chapter one : review
+
+** some questions about Hello World
+
+** concepts
+
+*** Northbridge and Southbridge
+
+**** PCI bridge 北桥芯片 
+     为了协调CPU ,内存 和 高速的图形设备而专门设计,使之高速交流数据.
+
+**** ISA bridge 南桥
+     北桥速度非常快,所以设计了专门处理低速设备的南桥,它处理磁盘,USB,鼠标键盘等设备的数据,由南桥汇总后连接到北桥.
+
+**** 多核处理器 , 共用价格昂贵的缓存设备.
+
+*** Design idea
+
+    Any problem in computer science can be solved by another layer of indirection .
+
+** operate system
+
+*** History
+**** Multiprogramming 多道程序
+
+**** Time-sharing System 分时系统.  
+此时的操作系统,如果程序while(1)霸占cpu,OS无权停止,像死机一样.
+
+**** Multi-tasking System 多任务系统.
+     1, 操作系统接管了所有的硬件资源,它本身运行在受硬件保护的级别.所有程序以进程的方式运行在低级别.
+     2, 操作系统可以强制剥夺CPU资源并分配给高优先级的进程
+
+*** device driver
+
+*** Memory
+
+****  Virtual Address
+a layer of indirection
+
+*****  1 .Segmentation 分段
+       分段解决了程序之间空间地址隔离,程序运行地址独立(虚拟独有)的问题
+
+*****  2 .Paging    分页
+       分页利用程序运行时的局部性原理,解决了空间利用率的问题.
+
+** Thread     (light weight process ) 
+一个标准的线程是由线程ID,当前指令指针(PC),寄存器集合和堆栈组成的.
+一个进程由一到多个线程组成,各个线程之间共享程序的内存空间(包括代码段,数据段,堆等)及一些进程级资源(如打开的文件和信号).
+| thread 私有   | 局部变量 | 函数参数 | TLS数据        |            |
+|---------------+----------+----------+----------------+------------|
+| process内共享 | 全局变量 | 堆上数据 | 函数内静态变量 | 打开的文件 |
+
+*** linux 多线程   redo
+linux中无论线程或进程都称为Task . 
+   涉及 :　fork , exec  , clone 
+   写时复制 copy on write .
+
+*** 同步与锁
+    1. binary Semaphore 二元信号量         都能获得锁 , 都可以释放锁
+    2. Mutex  互斥量                      谁锁谁释放,都可以获取锁
+    3. Critical Section  临界区           一个进程创建了锁,其他进程无法获取该锁
+    4. Read-Write lock 读写锁
+
+*  chatper two :  compile & link
+
+** 编译过程
+
+*** 1.预处理  -E
+生成 .i文件:   处理源代码中以#开头的预编译指令.  如展开宏定义,处理#if等,开展include文件,添加行号和文件名以便产生调试信息.
+*** 2.编译    -S
+生成.s文件
+**** 编译过程分为:
+| index | 步骤               | 工具                                   | 生成        |
+|     1 | 词法分析           | Scanner                                | Token       |
+|     2 | 语法分析           |                                        | Syntax Tree |
+|     3 | 语义分析           | Semantic Analyzer                      | 类型判定    |
+|     4 | 源代码优化         | Source code optimizer                  | 中间代码    |
+|     5 | 目标代码生成与优化 | Code Generator & Target Code Optimizer | 目标代码    |
+*** 3.汇编    -c
+生成.o文件.
+*** 4.链接
+生成可执行文件.链接过程主要包括以下
+    1. Address and Storage Allocation      地址和空间分配
+    2. Symbol Resolution                   符号绑定
+    3. Relocation                          重定位
+*** chapter three :  目标文件  
+编译器编译源代码后生成的文件叫做目标文件.它是已编译后的可执行文件,只是还没有经过链接的过程.其中有些符号或地址还需要调整.
+**  文件结构
+以Linux ELF文件结构为例
+| ELF header | .text | .data | .bss | ..other sections | Section header table | String tables & Symbol Tables |
+*** ELF 文件头
+*** 段表
+**** 重定位表
+ .rel.text 段
+**** 字符串表
+**** *符号*
+***** 特殊符号 
+链接器会为可执行文件增加很多特殊符号,如程序起始地址__executable_start ; 代码段结束地址 __etext ; 程序结束地址 _end. 所谓的地址是程序被装载时的虚拟地址.
+***** 符号修饰与函数签名
+***** extern "c"   |  __cplusplus
+#+BEGIN_SRC 
+#ifdef __cplusplus
+extern "c"{
+#endif
+#+END_SRC
+***** 调试信息 -g 
+* chapter four : static linking
+** 重定位表
+** C++相关π
+*** C++ 全局构造与析构
+    c/c++一般从main函数开始执行,但是在main函数调用之前,要先初始化进程执行环境,比如堆分配初始化(malloc,free),线程子系统等.C++的全局构造函数也在这一时期被执行.
+*** API与ABI 
+    api = application programming interface .      源代码级别编程接口
+    abi = application binary interface.     二进制级别的编程接口
+****  影响ABI的因素
+c相关:
+      1. 内置类型 的大小与放置方式( 大小端,对齐方式)
+      2. 组合类型的存储方式与内存分布 ( 如 struct, union, 数组等)
+      3. 外部符号与用户定义的符号之间的命名方式与解析方式.如函数名
+      4. 函数调用方式,如参数入栈顺序,返回值如何保持等;
+      5. 堆栈的分配方式,如参数和局部变量在堆栈的位置,参数传递方法等;
+      6. 寄存器使用约定,函数调用时哪些寄存器可以修改,哪些需要保存等.
+c++相关::
+      7. 继承类体系的内存分布,如基类,虚基类在继承类中的位置等;
+      8. 指向成员函数的指针(pointer-to-member)的内存分布,如何通过指向成员函数的指针来调用成员函数,如何传递this指针.
+      9. 如何调用虚函数,vtable的内存和分布形式,vtable指针在object中的位置等
+      10. template如何实例化
+      11. 外部符号的修饰
+      12. 全局对象的构造与析构
+      13. 异常的产生与捕捉
+      14. 标准库的细节问题,RTTI如何实现等
+      15. 内嵌函数访问细节.
+****  C++的诟病 (很多大牛喜欢用C开发)
+      二进制兼容性不好,有时不同的或者不同版本的编译器编译的二进制代码库有时不能兼容,就是因为ABI不统一!
+*** 
+* chapter six : load
+   程序(可执行文件) 是一个静态的概念,它就是一些预先编译好的指令和数据集合的一个文件.
+   进程 是运行时的一个过程.
+**  VAS
+   每个程序运行起来后,都有自己的独立的虚拟地址空间: virtual address space.
+*** PAE 地址扩展方式
+   32位CPU下,程序使用的空间能否超过4GB?
+   1. 不能超过4GB的虚拟地址空间,因为32位CPU只能使用32位指针,最大寻址范围就是4GB.
+   2. 却可以访问更大计算机内存空间,1995年后 intel开始使用36位的物理地址,可以访问高达64GB的物理内存.
+   3. 针对2的解释: 从硬件层面上看,原先的32位地址线只能访问最多4GB物理内存,但是扩展到36位地址线后,intel修改了页映射的方式.即PAE.
+   
+   扩展地址线只是过渡的方案,使用64位现阶段才是更好的解决方案.
+** 程序装载
+   overlay(覆盖载入) 和 Paging (页映射) 是两种很典型的动态装载方式.    都是利用了程序的局部性原理.
+   overlay已经被淘汰,目前都是采用Paging的方案.
+***  动态载入
+     思想就是   程序需要哪个模块,就载入哪个模块,如果不需要就暂不载入,存放在磁盘中.
+**** Paging
+     页映射是虚拟存储机制的一部分, 将内存和所有磁盘的数据和指令按照Page为单位划分为若干.以后所有装载和操作的单位都是页.
+** 从操作系统的角度看加载
+   在虚拟存储中,现代的硬件MMU都提供地址转换的功能,   
+   地址转换+页映射机制.
+*** 加载过程 
+   1. 首先chaungjian虚拟地址空间      ::    只需创建映射虚拟地址空间页 和 相应物理地址空间页的映射函数. 相关数据结构. ( 有时映射关系也不需要创建,后面发生页错误时再设置).
+   2. 读取可执行文件头,并且建立虚拟空间与可执行文件的映射关系.    :: 1中创建虚拟空间与物理内存间的页映射关系,2中创建虚拟地址和可执行文件的映射关系.   这一步极其关键.
+          a. 由于可执行文件在装载时实际上是被映射的虚拟空间,所以可执行文件又称映像文件.(Image).
+   3.  将CPU指令寄存器设置为可执行文件的入口,启动运行. 涉及到内核堆栈和用户堆栈的切换,CPU运行权限的切换.
+**** 页错误
+     上述加载过程执行完毕后,其实可执行文件的真正指令和数据并没有被载入内存.操作系统只是通过可执行文件的头部信息建立起可执行文件和进程虚拟内存之间的映射关系.
+     
+     当CPU运行到指定的函数入口地址(0x08048000)时,发现是个空页,于是触发页错误(Page Fault) .CPU把权限交给OS , 查询第二步建立的数据结构,找到空页面所在的VMA,计算相应的页在可执行文件的偏移,然后在物理内存中分配一个物理页,将进程转哦给你的该虚拟页与分配的物理页建立映射关系.然后把控制权交回给进程,进程从刚才页错误的位置继续.
+** 进程虚拟空间分布
+*** ELF文件链接视图和执行视图.
+    *Segment* : 对于相同权限的段(section),把它们合并到一起当作一个段进行加载时映射. 
+    | type           | view    | perspective                                |        |
+    | Execution View | Segment | 从装载的角度看,ELF文件可以按照segment划分. | 程序头 |
+    | Linking View   | Section | 从链接的角度看,ELF文件按Section划分.       | 段表   |
+*** deap  &  stack
+    一个进程的VMA可以划分为
+    | name  | power | 有无映像文件       |
+    | code  | r-x   | 有                 |
+    | data  | rwx   | 有                 |
+    | heap  | rwx   | 无,匿名,可向上扩展 |
+    | stack | rw-   | 无,匿名,可向下扩展 | 
+
+*** Page 172 ::important  .  程序启动时堆栈初始化详细描述.   ::important
+
+*** 程序的装载过程
+
+**** linux
+     1. ELF可执行文件格式的有效性,比如魔数,程序头表中段的数量;
+     2. 寻找动态链接的'.interp'段,设置动态链接路径
+     3. 根据ELF可执行文件的程序表头的描述,对ELF文件进行映射,比如代码,数据,只读数据.
+     4. 初始化ELF进程环境.
+     5. 将系统调用的返回地址修改为ELF可执行文件的入口.  静态/动态链接各不同.
+****  windows 
+
+
+
