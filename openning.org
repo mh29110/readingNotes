@@ -19,6 +19,12 @@ I have been a font-end programmer for  several years , and i really like this wo
 - git and version control advanced.  So big big project that has 500000 lines code.Every Detail!
 - MY PHANTOM  operating system !!! lol , this's so funny!
 - algorithm and Data structure.
+- mobile-game develop
+- network advanced
+- compute system ,from a programmer perspective .
+- python
+- c++ and linux for uqee’s game server study
+- linear algebra for 3d math and graphics .
 ** *optimization of  SNS (Social Networking Services)
 *** twitter , facebook , instagram , spotify , stackoverflow , google+,etc.
 - understand the world , and let the world know me . 
