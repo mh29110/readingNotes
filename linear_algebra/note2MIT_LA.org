@@ -1,0 +1,70 @@
+#+BLOG: phantomjia
+#+POSTID: 272
+#+DATE: [2014-08-21 Thu 19:48]
+#+OPTIONS: toc:nil num:t todo:nil pri:nil tags:nil ^:t TeX:nil
+#+CATEGORY: org2blog,notes
+#+TAGS:linearAlgebra
+#+DESCRIPTION:
+#+TITLE: MIT Linear Algebra Notes 2  <2>
+
+* lecture nine  - basis 
+** concept 
+- 向量组的线性无关性。  a bunch of vectors are independent.
+- 向量组生成的空间        the space span by vectors.
+- 向量空间的基    A  basis for a subspace or vector space . 
+- 子空间的维数    the dimesion of the subspace .
+** basis 
+向量空间的基是指 一个向量组中的这些向量具有两种性质：
+     1. they are independent  . 线性无关。
+     2. they span the entire space . 他们能生成整个空间。
+
+** summary 
+矩阵的秩是列空间的维数。 -- rank of matrix   , dimension of space . 一一对应的概念。
+*** aka
+主变量与自由变量。  主变量的个数（秩）是列空间的维数，自由变量的个数是零空间的维数。
+零空间的维数是自由变量的数目。
+*** 矩阵的向量空间的维数,矩阵的秩,矩阵的向量组的线性无关性.统一理解.
+* lecture ten  - four subspaces of matrix  
+**  list of four fundamental subspaces 
+这四个空间就是线性代数的核心内容. 
+1. the column space             C(A)   . 列空间
+2. the null space               N(A)   . 零空间
+3. the row space                C(A^T)  . 行空间       A的转置的列的所有组合.
+4. the left null space of A     N(A^T)   ./左零空间/      A的转置的零空间
+**  content of A_mxn
+| subspace | content | dimension | basis                       |
+|----------+---------+-----------+-----------------------------|
+| N(A)     | in R^n   | n-r       | the free columns vectors    |
+| C(A)     | in R^m   | rank of A | the pivot columns vectors   |
+| C(A^T)    | in R^n   | rank of A | the R(最简形)'s row vectors |
+| N(A^T)    | in R^m   | m-r       |                             |
+|----------+---------+-----------+-----------------------------|
+ note:  the pivot column = r  : 主列.个数由矩阵的秩r确定. 
+        the free column = n-r : 自由列向量,构成零空间的基.
+        R                     : 简化行阶梯形式
+** about the left null space  . 
+即A的转置零空间,也就是 A^T y = 0的解.
+if  . A^T y = 0 ->  (等边两侧分别转置)  y^T (A^T)^T = 0^T   -> y^T A = 0. ||所以称为左零空间.
+其实两者一样,一般用A^T y = 0表示.
+*** 用消元法求行最简+增光矩阵的方式求左零空间的基
+rref[A_mxn | I_mxm ]    -> (行最简R)->   [R_mxn | E_mxm ]
+以上变化等价于在矩阵左乘E,因为I_mxm 经过变换称为了E_mxm . EA = R.
+==>   [E_mxm*A_mxn | E_mxm*I_mxm] => [E_mxm*R_mxn | E_mxm*I_mxm ]
+**** 如果以上R变为I, 那么E就是A的逆矩阵了.这就是以前学的求可逆矩阵的逆矩阵的方法.
+* lecture eleven
+** matrix space  | 矩阵空间
+ 对加法与数乘封闭则称为空间. 从向量推广到矩阵.
+*** note: 乘法与向量空间没有关系.我们只关心数乘与加法.
+ 
+... 本节后补
+
+
+* lecture twelve  . about graphs and linear algebra
+** graph  = { nodes , edges }
+   it's a set of a bunch of nodes and edges , edges connecting the nodes.
+   结点和边的集合,边连通各个结点.
+        e.g:  一个5*6的矩阵表示五个结点连接6条线形成的图的全部信息.
+**** 六度分离猜想 | six degrees of separation
+** graph
+*** incidence matrix | 关联矩阵
+ 
