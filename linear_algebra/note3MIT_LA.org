@@ -1,0 +1,91 @@
+#+BLOG: phantomjia
+#+POSTID: 279
+#+DATE: [2014-08-30 Sat 10:07]
+#+OPTIONS: toc:nil num:t todo:nil pri:nil tags:nil ^:t TeX:nil
+#+CATEGORY: notes
+#+TAGS:linearAlgebra
+#+DESCRIPTION:
+#+TITLE: MIT Linear Algebra Notes<3>
+* lecture 14       orthogonal
+about ninety degrees chapter , with basis , vector , subspace .
+    Notice :  A^T * A .
+** prove the Pythagorean theorem.
+ 1. suppose vector  x , y  ... perpendicular   and x+y is the third side
+ 2. x^T*x = |x|^2 = x_1*x_1 + .... + x_n*x_n      |      <-- 易证
+ 3. (x+y)^T *(x+y) = x^T*x + y^T*y  + x^T*y + y^T*x  ;  | 把(x+y)看成一个向量.
+ 4. 欲证  |x|^2 + |y|^2 = |x+y|^2  ,即  x^T*x + y^T*y = (x+y)^T * (x+y) ,结合3中式,消除相等项.  0 = x^T*y + y^T*x . 又因为x^T*y = y^T*x . 
+    所以必须得到x^T*y = 0.
+** rules of math
+in math the one thing about math is you're supposed to follow the rules
+*** 零向量和任意向量正交.
+** subspace  
+*** orthogonal  
+subspace S is orthogonal to subspace T . 
+means: every vector in S is orthogonal to every vector in T . 
+       => 假设子空间S,T正交,则S中任意向量与T中任意向量正交.
+
+*** for matrix     A_mxn
+**** the row space(r dimension) is Orthogonal to  the null space( n-r dimension )   |两者将整个空间划分为两个互相正交的子空间.
+***** 对于Ax = 0 ; x 肯定在零空间内. 那么x就正交于行空间.
+1. 因为对于矩阵A的每一行向量,点积x ,最后得到的是b的对应行的分量.都是0 (b=0 ,对应的分量都为0).所以x正交于每一行向量.
+2. 又因为行空间就是矩阵行向量的所有线性组合.
+3. 所以矩阵的零空间正交行空间.
+***** 零空间和行空间的维数只和等于n;
+\ n维空间的正交补.
+意味着 零空间包含所有垂直于行空间的向量.
+
+***** 小应用
+suppose [1,2,5]* x = 0; 它的解是怎样的图形?
+答: 因为行向量空间是一维的直线,本身又在R^3 空间内,所以零空间是二维的,所以是个平面.
+
+**** the column space ( r dimension) is Orthogonal to  the null space of left( m-r dimension)
+
+** Ax = b 的讨论:end
+*** 当Ax = b无解时,如何求解? ...
+\实际应用中,比如测量脉搏,当多次测量求值时,有一些坏的数据,导致x无法求解.所以我们要筛选好的数据,求出最优解.  ->线性代数的领域.
+** A^T * A   ->  A^T*Ax = A^T b .  本章核心内容
+可以得到一个更好的矩阵.
+1. square         |方阵
+2. symmetric      |对称性矩阵  -prove->   (A^T*A)^T = A^T*A^T^T = A^T*A ;
+3. A^T*Ax = A^T b       |  现在式中的x就是更优的解.
+4. N(A^T*A) = N(A)  | 零空间
+5. Rank of A^T*A  equals the rank of A.
+6. A^T*A 不一定可逆.  因为A^T*A的秩等于A的秩.  *所以A^T*A的零空间等于A的零空间*.
+7. *当且仅当零空间内只有零向量时,A^T*A 可逆.即A的各列线性无关.*
+* lecture 15  projections  | 投影.  -That's why i am here .  :important:
+** vector projecting 
+\ projecting a vector b down on a vector a .  projection p 
+***  a^T(b-xa) = 0 .   as under picture showing ...
+[[file:imgs/project1.jpg]]
+1. 因为p是在a上,所以p = xa;  垂直边e= b-p ; a垂直于e ,本身都为列向量,所以把a转置为行向量相乘:
+a^T*e = a^T * (b-xa) = 0  =>    xa^T*a = a^T*b.   ->   x = a^T*b /(a^T*a);
+2. p = ax = a * ( a^T*b /(a^T*a) ) . 
+**** 这就是投影矩阵. P = a*a^T /( a^T*a) ;  | a^T*a 是一个数字,  a*a^T 是一个方阵矩阵.
+即投影p 是一个投影矩阵作用于某个变量后的结果.
+**** P 是对称性的.
+**** 如果投影两次,结果是一样的.(因为已经在目的地了). 所以P的平方是她自己.
+*** solution  x 为最优解(并非原来的可能无解的x), p = Ax;
+1. A^T(b-Ax) = 0  |垂直关系   -> A^T*Ax = A^T*b;
+2. p = Ax = A( A^T*b)/(A^T*A) = A(A^T*A)^-1*A^T*b ;
+3. 则投影矩阵大P,  P = A(A^T*A)^-1*A^T  . |此处只有A为可逆方阵时才能消为单位矩阵.
+4. P^2 = P   . 相乘,利用中间的逆矩阵相乘为I可证.
+*** why project ?
+1. because Ax = b ,may have no solution  but we have to find one which closest .
+2. so we solve the closest problem that i can solve.
+3. Ax has to be in the column space.but b is probably not in the column space. ; p in and closest.
+4. so we solve Ax = p to instead .p is the projection of b onto the column space.
+** least squared   fitting by a line  .
+/最小二乘法 拟合一条直线.
+*** 核心方程
+Ax = b 无解,但是 乘以A的转置后 A^T*Ax = A^T*b 就有解了,虽然两个x不同,但是后者是最接近前者的解,是最优解.
+
+* other
+*** 以下等价概念: 方阵   : from baidu QA:
+1. 矩阵可逆
+2. 矩阵满秩
+3. 矩阵行列式不等于零.
+4. 矩阵行(列)向量组线性无关
+5. 矩阵非奇异
+6. 以该矩阵为系数矩阵的其次线性方程组只有零解.
+
+#+imgs/project1.jpg http://phantomjia.files.wordpress.com/2014/08/wpid-project1.jpg
