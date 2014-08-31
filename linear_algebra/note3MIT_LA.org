@@ -52,7 +52,7 @@ suppose [1,2,5]* x = 0; ËüµÄ½âÊÇÔõÑùµÄÍ¼ĞÎ?
 5. Rank of A^T*A  equals the rank of A.
 6. A^T*A ²»Ò»¶¨¿ÉÄæ.  ÒòÎªA^T*AµÄÖÈµÈÓÚAµÄÖÈ.  *ËùÒÔA^T*AµÄÁã¿Õ¼äµÈÓÚAµÄÁã¿Õ¼ä*.
 7. *µ±ÇÒ½öµ±Áã¿Õ¼äÄÚÖ»ÓĞÁãÏòÁ¿Ê±,A^T*A ¿ÉÄæ.¼´AµÄ¸÷ÁĞÏßĞÔÎŞ¹Ø.*
-* lecture 15  projections  | Í¶Ó°.  -That's why i am here .  :important:
+* lecture 15       projections  | Í¶Ó°.  -That's why i am here .                :important:
 ** vector projecting 
 \ projecting a vector b down on a vector a .  projection p 
 ***  a^T(b-xa) = 0 .   as under picture showing ...
@@ -69,6 +69,9 @@ a^T*e = a^T * (b-xa) = 0  =>    xa^T*a = a^T*b.   ->   x = a^T*b /(a^T*a);
 2. p = Ax = A( A^T*b)/(A^T*A) = A(A^T*A)^-1*A^T*b ;
 3. ÔòÍ¶Ó°¾ØÕó´óP,  P = A(A^T*A)^-1*A^T  . |´Ë´¦Ö»ÓĞAÎª¿ÉÄæ·½ÕóÊ±²ÅÄÜÏûÎªµ¥Î»¾ØÕó.
 4. P^2 = P   . Ïà³Ë,ÀûÓÃÖĞ¼äµÄÄæ¾ØÕóÏà³ËÎªI¿ÉÖ¤.
+*** Ax = b ÈôÓĞ½â,½âÒ»¶¨ÊÇÁĞÏòÁ¿µÄÏßĞÔ×éºÏ,ËùÒÔ½âÒ»¶¨ÔÚÁĞ¿Õ¼äÄÚ,ËùÒÔ×îÓÅ½â¾ÍÊÇ*b*ÔÚÁĞ¿Õ¼äµÄÍ¶Ó°.
+**** ÈôbÔÚÁĞ¿Õ¼äÖĞ,ÔòÍ¶Ó°¹ıºó  Pb = b;
+**** Èôb´¹Ö±ÓÚÁĞ¿Õ¼ä,ÔòÍ¶Ó°ºó   Pb = 0;
 *** why project ?
 1. because Ax = b ,may have no solution  but we have to find one which closest .
 2. so we solve the closest problem that i can solve.
@@ -79,8 +82,28 @@ a^T*e = a^T * (b-xa) = 0  =>    xa^T*a = a^T*b.   ->   x = a^T*b /(a^T*a);
 *** ºËĞÄ·½³Ì
 Ax = b ÎŞ½â,µ«ÊÇ ³ËÒÔAµÄ×ªÖÃºó A^T*Ax = A^T*b ¾ÍÓĞ½âÁË,ËäÈ»Á½¸öx²»Í¬,µ«ÊÇºóÕßÊÇ×î½Ó½üÇ°ÕßµÄ½â,ÊÇ×îÓÅ½â.
 
+* lecture 16       
+** best solution ×îÓÅ½â ×îĞ¡¶ş³Ë·¨  
+*** ËÄÖÖ×Ó¿Õ¼äµÄÍ¼ĞÎÊÇ»ù±¾²Î¿¼Í¼ĞÎÖ®Ò»;
+*** A^T*Ax  =  A^T*b ;      # xÎª×îÓÅ½â,ÊÇÍ³¼ÆÑ§ºÍ¹ÀÖµÖĞ×îÖØÒªµÄ·½³ÌÊ½.ÓÈÆäÊÇÓöµ½ÔëÒôºÍÔëÒô.
+** if A has independent columns ,then A^T*A is invertible.
+/Èç¹û¾ØÕóAÓĞÏßĞÔÎŞ¹ØµÄÁĞÏòÁ¿,ÄÇÃ´A^T*A¿ÉÄæ.
+*** Ö¤Ã÷ÒÔÉÏÀíÂÛ:
+1. ¼ÙÉè A^T*Ax = 0,Èç¹ûÎÒÃÇÖ¤Ã÷xÒ»¶¨ÊÇÁãÏòÁ¿,ÄÇÃ´¾ÍÖ¤Ã÷ÁËËü¿ÉÄæ.   | *ÒòÎªÈç¹û¾ØÕó¿ÉÄæ,ÄÇÃ´ËüµÄÁã¿Õ¼ä½öÎªÁãÏòÁ¿*.
+2. Á½±ßÍ¬Ê±³ËÒÔx^T ,ÔòµÃ  x^T*A^T*Ax = x^T*0;  Ôò  (Ax)^T *Ax = 0 . ÔòAxºÍËüµÄ×ªÖÃµÄµã»ıÎªÁã,ÔòAx±ØĞëÎªÁã.
+3. ÓÖÒòÎªAµÄÁĞÏòÁ¿¶¼ÏßĞÔÎŞ¹Ø.ËùÒÔx±ØĞëÊÇÁãÏòÁ¿.
+** »¥Ïà´¹Ö±µÄµ¥Î»ÏòÁ¿,Ò»¶¨ÊÇÏßĞÔÎŞ¹ØµÄ.
+/´¹Ö±ÓÖ³ÆÎªÕı½». ->  /±ê×¼Õı½»ÏòÁ¿×é/
+* lecture 17     orthogonal basis & orthogonal matrices
+Q´ú±íÕı½»¾ØÕó,²»Ò»¶¨ÊÇ·½Õó.
+** orthogonal basis
+*** Èç¹ûQÊÇ·½Õó,ÔòQ^T*Q = I ,Ôò Q^T = Q^-1; 
+** orthnormal matrices ±ê×¼Õı½»¾ØÕó
+/ orthogonal matrix  
+
 * other
-*** ÒÔÏÂµÈ¼Û¸ÅÄî: ·½Õó   : from baidu QA:
+** ÀëÈºÖµ outlier 
+** ÒÔÏÂµÈ¼Û¸ÅÄî: ·½Õó   : from baidu QA:
 1. ¾ØÕó¿ÉÄæ
 2. ¾ØÕóÂúÖÈ
 3. ¾ØÕóĞĞÁĞÊ½²»µÈÓÚÁã.
@@ -89,3 +112,11 @@ Ax = b ÎŞ½â,µ«ÊÇ ³ËÒÔAµÄ×ªÖÃºó A^T*Ax = A^T*b ¾ÍÓĞ½âÁË,ËäÈ»Á½¸öx²»Í¬,µ«ÊÇºóÕßÊÇ×
 6. ÒÔ¸Ã¾ØÕóÎªÏµÊı¾ØÕóµÄÆä´ÎÏßĞÔ·½³Ì×éÖ»ÓĞÁã½â.
 
 #+imgs/project1.jpg http://phantomjia.files.wordpress.com/2014/08/wpid-project1.jpg
+** Ò»Ğ©ÖØÒªµÄ¾ØÕó
++ triangular matrix Èı½Ç¾ØÕó
++ diagonal matrices   ¶Ô½Ç¾ØÕó
++ permutation matrices    ÖÃ»»¾ØÕó
++ row echelon forms    ĞĞ½×Ìİ¾ØÕó
++ projection matrices  Í¶Ó°¾ØÕó
++ orthonormal columns matrices ±ê×¼Õı½»ÁĞ¾ØÕó
+
