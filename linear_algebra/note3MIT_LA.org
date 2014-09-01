@@ -94,12 +94,35 @@ Ax = b ÎŞ½â,µ«ÊÇ ³ËÒÔAµÄ×ªÖÃºó A^T*Ax = A^T*b ¾ÍÓĞ½âÁË,ËäÈ»Á½¸öx²»Í¬,µ«ÊÇºóÕßÊÇ×
 3. ÓÖÒòÎªAµÄÁĞÏòÁ¿¶¼ÏßĞÔÎŞ¹Ø.ËùÒÔx±ØĞëÊÇÁãÏòÁ¿.
 ** »¥Ïà´¹Ö±µÄµ¥Î»ÏòÁ¿,Ò»¶¨ÊÇÏßĞÔÎŞ¹ØµÄ.
 /´¹Ö±ÓÖ³ÆÎªÕı½». ->  /±ê×¼Õı½»ÏòÁ¿×é/
-* lecture 17     orthogonal basis & orthogonal matrices
+* lecture 17       orthogonal basis & orthogonal matrices
 Q´ú±íÕı½»¾ØÕó,²»Ò»¶¨ÊÇ·½Õó.
 ** orthogonal basis
 *** Èç¹ûQÊÇ·½Õó,ÔòQ^T*Q = I ,Ôò Q^T = Q^-1; 
 ** orthnormal matrices ±ê×¼Õı½»¾ØÕó
 / orthogonal matrix  
+
+* lecture 18       determinant            /det/ = |A|
+/·½ÕóµÄĞĞÁĞÊ½  
+** wiki  :
+ĞĞÁĞÊ½ÊÇÊıÑ§ÖĞµÄÒ»¸öº¯Êı£¬½«Ò»¸ön x nµÄ¾ØÕóAÓ³Éäµ½Ò»¸ö±êÁ¿£¬¼Ç×÷\det(A)»ò|A|¡£ĞĞÁĞÊ½¿ÉÒÔ¿´×öÊÇÓĞÏòÃæ»ı»òÌå»ıµÄ¸ÅÄîÔÚÒ»°ãµÄÅ·¼¸ÀïµÃ¿Õ¼äÖĞµÄÍÆ¹ã¡£»òÕßËµ£¬ÔÚ n Î¬Å·¼¸ÀïµÃ¿Õ¼äÖĞ£¬ĞĞÁĞÊ½ÃèÊöµÄÊÇÒ»¸öÏßĞÔ±ä»»¶Ô¡°Ìå»ı¡±ËùÔì³ÉµÄÓ°Ïì¡£
+** ĞĞÁĞÊ½·ÇÁã µÈ¼ÛÓÚ ·½Õó¿ÉÄæ.
+**  properties of determinant 
+1. the determinant of the identity is one;     det I = 1 .     |µ¥Ôª¾ØÕó
+2. exchange rows ,reverse the sign of the determinant   ;½»»»ĞĞ,ĞĞÁĞÊ½·ûºÅ±ä·´.  |ÖÃ»»¾ØÕó
+3. key property ;
+   1. t multiply one row, t multiply determinant      ;Êı³Ë¾ØÕóµÄÆäÖĞÒ»ĞĞ¶øÆäËûĞĞ²»±ä,µÈÓÚÊı³ËĞĞÁĞÊ½.
+   2. ; ÆäÖĞÒ»ĞĞ²ğ·ÖÏòÁ¿×éºÏĞÂ¾ØÕóÏà¼Ó,ĞĞÁĞÊ½²»±ä.
+4. if two rows are equal , the determinant is zero     ;Èç¹ûÁ½ĞĞÏàµÈ,ÄÇÃ´ĞĞÁĞÊ½ÎªÁã.
+5. subtract some multiple l times row i from row k,determinant wont change    ;ÏûÔª·¨,ĞĞÁĞÊ½²»±ä
+6. row of zeros leads to determinant of A equals zero    ;ÈôÓĞÒ»ĞĞÊÇÁã,ÄÇÃ´AµÄĞĞÁĞÊ½ÎªÁã.
+7. ¶ÔÓÚÉÏÈı½Ç¾ØÕóµÄĞĞÁĞÊ½,ÊÜ¶Ô½ÇÏßÔªËØÓ°Ïì. ÏòÉÏÏûÔªºóÖ÷ÔªµÄ³Ë»ı.
+8. det A = 0 exactly when A is singular     ;Èç¹ûAµÄĞĞÁĞÊ½ÎªÁã,ÔòAÊÇÆæÒì¾ØÕó.
+   ÒòÎª Èç¹û¾ØÕó²»¿ÉÄæ,ÔòÍ¨¹ıÏûÔª·¨,×îÖÕ»áÈ¡µÃÈ«ÊÇÁãµÄĞĞ,ÔòĞĞÁĞÊ½±ØÈ»ÎªÁã,ËùÒÔ¾ØÕó¿ÉÄæµ±ÇÒ½öµ±ĞĞÁĞÊ½ÎªÁã.
+9. det AB = DetA * detB  ;     
+   det A^2 = (det A)^2     ; det A^-1 = 1/det A  ; det 2A = 2^n det A   ;
+10. det A^T = det A    ;AµÄ×ªÖÃµÄĞĞÁĞÊ½µÈÓÚAµÄĞĞÁĞÊ½ ,ÔòÈç¹û¾ØÕóÓĞÈ«ÎªÁãµÄĞĞ,ÄÇÃ´ĞĞÁĞÊ½Ò²ÎªÁã.
+    ĞĞÁĞ¿ÉÒÔ»¥»»;
+
 
 * other
 ** ÀëÈºÖµ outlier 
@@ -119,4 +142,4 @@ Q´ú±íÕı½»¾ØÕó,²»Ò»¶¨ÊÇ·½Õó.
 + row echelon forms    ĞĞ½×Ìİ¾ØÕó
 + projection matrices  Í¶Ó°¾ØÕó
 + orthonormal columns matrices ±ê×¼Õı½»ÁĞ¾ØÕó
-
+  
