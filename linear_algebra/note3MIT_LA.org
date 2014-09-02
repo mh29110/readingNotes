@@ -123,6 +123,32 @@ Q代表正交矩阵,不一定是方阵.
 10. det A^T = det A    ;A的转置的行列式等于A的行列式 ,则如果矩阵有全为零的行,那么行列式也为零.
     行列可以互换;
 
+* lecture 19       determinant 2
+\时代变了,现在的行列式在线性代数中是非常小的,完整的一部分.
+** formular for determinant     ;行列式求解公式
+[[file:imgs/WQ2$WZVG%)PSIJPOQQ{Z0QB.png]]
+** 代数余子式
+* lecture 20       volume & determinant
+** 求可逆矩阵的公式,通过代数余子式和行列式
+A^-1 = (1/det A) * C^T ,C is the matrix of cofactors ;C是由代数余子式组成的矩阵.
+** 行列式的值等于体积.
+** *即已知顶点,如何求三角形/平行四边形的面积*:   :important:
+[[file:imgs/volume.png]]
+使用行列式要比高中传统方式更容易表述.
+*** 即使三角形的顶点都没在原点,很容易转化到原点.
+* lecture 21 Eigenvalues - Eigenvectors
+/特征值  -   特征向量
+** 概念
+*** 矩阵的意义
+\矩阵A作用在输入向量x上,结果得到向量Ax ;
+*** 特征向量
+使得Ax 平行于 x ,即特征向量.
+*** 特征值
+Ax = λx ; λ is eigenvalue .
+**** 示例 : 
++ 任意垂直于平面的向量x, 其投影矩阵为P ,则 Px = x; λ = 1;
++ 任意在平面内的向量x,投影矩阵P , 则Px = 0x;  λ = 0;
+*** 矩阵的 特征值的和等于矩阵对角线元素的和.
 
 * other
 ** 离群值 outlier 
@@ -143,3 +169,6 @@ Q代表正交矩阵,不一定是方阵.
 + projection matrices  投影矩阵
 + orthonormal columns matrices 标准正交列矩阵
   
+
+#+imgs/WQ2$WZVG%)PSIJPOQQ{Z0QB.png http://phantomjia.files.wordpress.com/2014/09/wpid-wq2wzvgpsijpoqqz0qb.png
+#+imgs/volume.png http://phantomjia.files.wordpress.com/2014/09/wpid-volume.png
