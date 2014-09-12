@@ -1,0 +1,13 @@
+#+DATE: [2014-09-09 Tue 15:00]
+#+OPTIONS: toc:nil num:t todo:nil pri:nil tags:nil ^:t TeX:nil
+#+CATEGORY: org2blog,opengl
+#+TAGS:opengl
+#+DESCRIPTION:
+#+TITLE: opengl super bible reading notes <1>
+
+ <   super bible  >
+* chapter five   *Data*
+** buffers
+In OpenGL, buffers are linear allocations of memory that can /be/ used for a number of purposes. They are /represented/ by names, which are essentially opaque handles that OpenGL uses to identify them.
+
+
