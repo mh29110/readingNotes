@@ -1,0 +1,45 @@
+#+BLOG: phantomjia
+#+POSTID: 400
+#+DATE: [2015-05-29 Fri 15:22]
+#+OPTIONS: toc:t num:t todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: 从csdn博客搬家
+* 我的CSDN博客
+是我早期维护的博客,里面大多是印象笔记的备份.前不久居然发生了账户被盗,博客被封禁删除的事情.不禁让我震惊...
+
+
+特此专门想把csdn的博客搬运到自己的网站上,但是苦于不多不少的量,查了几个博客搬家的官方办法后,时钟无法联通csdn和wp这两种博客.
+还好找到了[[http://sourceforge.net/projects/blogstowordpress/][blogstowordpress]] 这个.特此记录.
+
+
+source:  http://sourceforge.net/projects/blogstowordpress/
+
+FAQ:     http://www.crifan.com/crifan_released_all/website/python/blogstowordpress/  
+
+sample   http://www.crifan.com/crifan_released_all/website/python/blogstowordpress/usage_example/
+
+** 运行后生成如下文件
+ [WXR_Csdn_[mh29110]_20150529_1612-0.xml]
+ [WXR_Csdn_[mh29110]_20150529_1612-1.xml]
+ [mh29100]   #the resource directory ;
+ 
+**** then ..
+ To import this information into a WordPress blog follow these steps:
+    1.  Log into your blog as an administrator.
+    2.  Go to Manage > Import in the blog's admin.
+    3.  Choose "WordPress" from the list of importers.
+    4.  Upload this file using the form provided on that page.
+    5.  You will first be asked to map the authors in this export file to users 
+        on the blog. For each author, you may choose to map an existing user on 
+        the blog or to create a new user.
+    6.  WordPress will then import each of the posts' info
+        contained in this file onto your blog.
+
+**** 如何使得搬家后的wordpress的网站中的图片可以正常显示
+***** 把图片上传到网站目录下.
+参考sample中对图片的特殊处理  :
+*增加-w参数* 
+....我悲剧的没加,最后只能在数据库里进行了替换操作.
+** ALL DONE !!

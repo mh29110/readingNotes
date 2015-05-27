@@ -1,0 +1,11 @@
+#+BLOG: phantomjia
+#+POSTID: 381
+#+DATE: [2015-05-27 Wed 15:00]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+CATEGORY: org2blog
+#+TAGS:
+#+DESCRIPTION:
+#+TITLE: I'm back 
+
+test my emacs org2blog to cloud blog setting .
+
